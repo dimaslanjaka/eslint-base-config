@@ -31,8 +31,7 @@ describe('eslint base config integration', () => {
 
   test('eslint runs on ugly code without crashing', () => {
     const result = setupModule.runEslint(uglyJsPath, { stdio: 'pipe' });
-
-    expect(result.status).not.toBe(2); // 2 = fatal error
+    expect(result.status).toBe(1); // 1 = linting errors found
   });
 
   test('eslint --fix fixes ugly code and revalidate', () => {
