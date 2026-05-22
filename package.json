@@ -67,6 +67,7 @@
     "@jest/environment": "^30.4.1",
     "@jest/expect": "^30.4.1",
     "@jest/globals": "^30.4.1",
+    "@jest/test-sequencer": "^30.4.1",
     "@jest/types": "^30.4.1",
     "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-json": "^6.1.0",

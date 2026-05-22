@@ -21,6 +21,7 @@ const config = {
   cache: true,
   cacheDirectory: path.join(__dirname, 'tmp/jest'),
   bail: 1,
+  testSequencer: path.join(__dirname, 'jest.sequencer.cjs'),
   collectCoverageFrom: [
     'src/*.{js,ts}',
     '!**/node_modules/**',
