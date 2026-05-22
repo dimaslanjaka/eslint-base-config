@@ -6,9 +6,9 @@
   "module": "dist/eslint.config.mjs",
   "types": "dist/eslint.config.d.ts",
   "files": [
-    "eslint.config.mjs",
-    ".prettierrc.json",
-    "dist"
+    "./eslint.config.js",
+    "./.prettierrc.json",
+    "./dist"
   ],
   "exports": {
     ".": {
@@ -28,6 +28,11 @@
   },
   "packageManager": "yarn@4.13.0",
   "dependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/eslint-parser": "^7.28.6",
+    "@babel/plugin-syntax-import-assertions": "^7.28.6",
+    "@babel/preset-env": "^7.29.5",
+    "@babel/preset-react": "^7.28.5",
     "@eslint/eslintrc": "3.3.5",
     "@eslint/js": "9",
     "@prettier/plugin-xml": "^3.4.2",
@@ -36,6 +41,8 @@
     "eslint": "9",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "jsonc-parser": "3.3.1",
     "prettier": "3.8.3",
     "prettier-plugin-embed": "^0.5.1",
@@ -46,6 +53,8 @@
     "typescript-eslint": "8.59.3"
   },
   "devDependencies": {
+    "@types/babel__core": "^7",
+    "@types/babel__preset-env": "^7",
     "binary-collections": "^2.0.11",
     "tar-stream": "^3.2.0",
     "tsdown": "^0.22.0",

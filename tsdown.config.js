@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-  entry: ['src/**/*.{ts,js,mjs,cjs}', '!src/**/*.runner.*', 'eslint.config.mjs'],
+  entry: ['src/**/*.{ts,js,mjs,cjs}', '!src/**/*.runner.*', 'eslint.config.*'],
 
   format: ['esm', 'cjs'],
 

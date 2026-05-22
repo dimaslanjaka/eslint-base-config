@@ -16,6 +16,6 @@
     "noEmit": false,
     "types": ["node"]
   },
-  "include": ["src/**/*", "eslint.config.mjs"],
+  "include": ["src/**/*", "eslint.config.*"],
   "exclude": ["**/*.runner.*"]
 }
