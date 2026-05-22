@@ -107,7 +107,14 @@ export default tseslint.config(
 
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',
-
+      // ESM restriction
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: 'CallExpression[callee.name="require"]',
+          message: "require() is not allowed in ESM (.mjs). Use import instead."
+        }
+      ],
       'no-unused-vars': [
         'error',
         {
