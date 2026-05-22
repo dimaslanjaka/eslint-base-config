@@ -2,14 +2,13 @@
 # Dependencies
 # =========================
 node_modules/
-.yarn/
-!.yarn/cache/
-!.yarn/unplugged/
-!.yarn/*.gz
-!.yarn/version*
 package-lock.json
 yarn.lock
 .pnp.*
+
+**/.yarn/*
+!**/.yarn/releases/
+!**/.yarn/releases/*.cjs
 
 # =========================
 # Secrets
