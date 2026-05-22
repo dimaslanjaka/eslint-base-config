@@ -87,7 +87,7 @@ function runEslint(file, argsOrOptions = [], options = {}) {
   const isArgsArray = Array.isArray(argsOrOptions);
   const args = isArgsArray ? argsOrOptions : [];
   const opts = isArgsArray ? options : argsOrOptions;
-  return run('npx', ['-y', 'eslint', ...args, file], { ...opts, throws: false });
+  return run('npx', ['-y', 'eslint', ...args, file], { cwd: __dirname, ...opts, throws: false });
 }
 
 function writeUglyCodes(srcFilename = 'ugly', destExt = 'js') {
