@@ -85,7 +85,7 @@
   },
   "resolutions": {
     "cross-spawn": "https://github.com/dimaslanjaka/node-cross-spawn/raw/78b09a1f799430fb251c1b438ec56ce7957674f4/release/cross-spawn.tgz",
-    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/84128efcccfa8c6d655af8b55c4631bd085c1795/releases/bin.tgz",
+    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/e11274250c202c6a798f154f53b5475ee1db618f/releases/bin.tgz",
     "git-command-helper": "https://github.com/dimaslanjaka/git-command-helper/raw/ed17f70eb7444d24bd8eb984a4afe9fd64652838/release/git-command-helper.tgz",
     "sbg-utility": "https://github.com/dimaslanjaka/static-blog-generator/raw/44e5c7b79b4e60f8c2d34857c27b8ce677d7493e/packages/sbg-utility/release/sbg-utility.tgz"
   }
