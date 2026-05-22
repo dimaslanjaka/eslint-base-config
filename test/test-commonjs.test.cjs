@@ -20,7 +20,7 @@ describe('eslint base config integration', () => {
 
   beforeEach(() => {
     // Ensure the ugly.js file is reset before each test
-    uglyJsPath = setupModule.writeUglyJsCode();
+    uglyJsPath = setupModule.writeUglyCodes();
   });
 
   test('eslint runs on ugly code without crashing', () => {

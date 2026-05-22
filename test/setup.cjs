@@ -90,15 +90,13 @@ function runEslint(file, argsOrOptions = [], options = {}) {
   return run('npx', ['-y', 'eslint', ...args, file], { ...opts, throws: false });
 }
 
-function writeUglyJsCode() {
-  fs.ensureDirSync(fixturesDir);
+function writeUglyCodes(srcFilename = 'ugly', destExt = 'js') {
+  const dest = path.join(fixturesDir, `${srcFilename}.${destExt.replace(/^\./, '')}`);
+  const uglySource = path.join(__dirname, 'fixtures', `${srcFilename}.txt`);
 
-  const file = path.join(fixturesDir, 'ugly.js');
-  const uglySource = path.join(__dirname, 'fixtures', 'ugly.txt');
+  writeFile(dest, fs.readFileSync(uglySource, 'utf8'));
 
-  writeFile(file, fs.readFileSync(uglySource, 'utf8'));
-
-  return file;
+  return dest;
 }
 
 /**
@@ -186,7 +184,7 @@ module.exports = {
   generateEsmConfig,
   generateCjsConfig,
   runEslint,
-  writeUglyJsCode,
+  writeUglyCodes,
   setup,
   buildPackage
 };
