@@ -24,7 +24,7 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "build": "rollup -c rollup.config.js && npm run build-dts && copy .prettierrc.json ./dist/ && node debug-tgz.mjs",
+    "build": "rollup -c rollup.config.js && npm run build-dts && copy .prettierrc.json ./dist/.prettierrc.json && node debug-tgz.mjs",
     "build-dts": "tsc -p tsconfig.dts.json",
     "pack": "node package.cjs",
     "prepare": "husky",
