@@ -28,7 +28,7 @@
     "build-dts": "tsc -p tsconfig.dts.json",
     "pack": "node package.cjs",
     "prepare": "husky",
-    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles --forceExit --bail",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles --forceExit --bail 1",
     "test:coverage": "npm test -- --coverage",
     "lint": "eslint \"src/**/*\" --fix",
     "postinstall": "node postinstall.cjs",
