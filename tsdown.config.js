@@ -6,7 +6,7 @@ export default defineConfig({
   format: ['esm', 'cjs'],
 
   dts: false,
-  clean: true,
+  clean: false,
   sourcemap: true,
 
   // 🔥 KEY
