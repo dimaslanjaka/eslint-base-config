@@ -1,0 +1,104 @@
+import React from "react"
+
+let ug_state = 0
+let ug_data = {}
+
+function UgComponent(props) {
+
+  function ugClick() {
+    console.log("clicked")
+    ug_state = ug_state + 1
+    ug_data["last"] = ug_state
+  }
+
+  return (
+    <div onClick={ugClick}>
+
+      <h1>{"ugly jsx header"} {ug_state}</h1>
+
+      <p>{props.value + ug_state}</p>
+
+      {true && <span>{"always rendered ugly span"}</span>}
+
+      {false ? <div>{"never rendered"}</div> : <div>{"always rendered"}</div>}
+
+      <button onClick={function () {
+        ugClick()
+        eval("console.log('still unsafe but valid')")
+      }}>
+        click me
+      </button>
+
+    </div>
+  )
+}
+
+export default function UgApp() {
+
+  return (
+    <div>
+
+      <UgComponent value={1} />
+
+      <UgComponent value={ug_state} />
+
+      {[1, 2, 3, 4].map(function (i) {
+        return <UgComponent key={i} value={i * i} />
+      })}
+
+      {(() => {
+        if (ug_state > 3) {
+          return (
+            <div>
+              <h2>{"state big"}</h2>
+              <button onClick={function () {
+                ug_state = 0
+                ug_data = {}
+              }}>
+                reset
+              </button>
+            </div>
+          )
+        } else {
+          return (
+            <div>
+              <h2>{"state ok"}</h2>
+            </div>
+          )
+        }
+      })()}
+
+    </div>
+  )
+}
+
+class UgWeirdClass extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = { x: 1, y: 2 }
+  }
+
+  render() {
+    return (
+      <div onMouseMove={(e) => {
+        this.setState({ x: e.clientX, y: e.clientY })
+      }}>
+
+        <h1>{this.state.x + this.state.y}</h1>
+
+        <button onClick={function () {
+          console.log("class click")
+          eval("console.log('ugly class eval')")
+        }}>
+          ugly button
+        </button>
+
+        {this.props.children}
+
+      </div>
+    )
+  }
+}
+
+globalThis.ug_jsx_leak = UgApp
