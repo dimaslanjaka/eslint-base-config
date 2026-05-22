@@ -53,5 +53,5 @@ function printTgzTree(filePath) {
 }
 
 // usage
-spawnSync("yarn", ["pack"], { stdio: "inherit", cwd: __dirname });
+spawnSync("yarn", ["pack"], { stdio: "inherit", cwd: __dirname, shell: true });
 printTgzTree(path.resolve(__dirname, "package.tgz"));

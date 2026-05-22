@@ -5,7 +5,7 @@
   "main": "eslint.config.mjs",
   "files": [
     "eslint.config.mjs",
-    ".prettierc.*"
+    ".prettierrc.json"
   ],
   "keywords": [],
   "author": "Dimas Lanjaka",
