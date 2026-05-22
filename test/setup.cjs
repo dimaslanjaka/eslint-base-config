@@ -7,6 +7,7 @@ const isWin = process.platform === 'win32';
 
 const fixturesDir = path.join(__dirname, 'fixtures');
 const ESLINT_PACKAGE = '@dimaslanjaka/eslint-base-config';
+const PROJECT_ROOT = path.join(__dirname, '..');
 
 const PATHS = {
   tgz: path.join(__dirname, '..', 'release', 'dimaslanjaka-eslint-base-config.tgz'),
@@ -164,11 +165,28 @@ async function setup(cache = true, debug = false) {
   return true;
 }
 
+function buildPackage() {
+  run('yarn', ['run', 'build'], {
+    cwd: PROJECT_ROOT,
+    stdio: 'inherit',
+    shell: isWin,
+    throws: true
+  });
+
+  run('yarn', ['run', 'pack'], {
+    cwd: PROJECT_ROOT,
+    stdio: 'inherit',
+    shell: isWin,
+    throws: true
+  });
+}
+
 module.exports = {
   fixturesDir,
   generateEsmConfig,
   generateCjsConfig,
   runEslint,
   writeUglyJsCode,
-  setup
+  setup,
+  buildPackage
 };
