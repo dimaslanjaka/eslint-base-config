@@ -46,7 +46,7 @@ function run(command, argsOrOptions = [], options = {}) {
  * @param {string} content
  */
 function writeFile(file, content) {
-  fs.outputFileSync(file, `${content.trim()}\n`);
+  fs.writeFileSync(file, `${content.trim()}\n`);
 }
 
 /**
