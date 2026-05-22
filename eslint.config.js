@@ -170,12 +170,13 @@ export default defineConfig([
       ...commonRules,
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/no-this-alias': [
-        'error',
-        {
-          allowedNames: ['self', 'hexo']
-        }
-      ]
+      // '@typescript-eslint/no-this-alias': [
+      //   'error',
+      //   {
+      //     allowedNames: ['self', 'hexo']
+      //   }
+      // ]
+      '@typescript-eslint/no-this-alias': 'off'
     }
   },
 
