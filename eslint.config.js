@@ -14,12 +14,9 @@ import tseslint from 'typescript-eslint';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const prettierrc = parseJSONC(
-  fs.readFileSync(path.resolve(__dirname, '.prettierrc.json'), 'utf8')
-);
+const prettierrc = parseJSONC(fs.readFileSync(path.resolve(__dirname, '.prettierrc.json'), 'utf8'));
 
 export default tseslint.config(
-
   // 🌍 GLOBAL CONFIG
 
   js.configs.recommended,
@@ -83,7 +80,6 @@ export default tseslint.config(
     }
   },
 
-
   // 📜 JS / JSX (Babel)
 
   {
@@ -123,7 +119,6 @@ export default tseslint.config(
     }
   },
 
-
   // 📦 CJS
   {
     files: ['**/*.cjs'],
@@ -158,7 +153,6 @@ export default tseslint.config(
       ]
     }
   },
-
 
   // 🟦 TypeScript
 
@@ -200,7 +194,6 @@ export default tseslint.config(
       ]
     }
   },
-
 
   // ⚛️ React
 
