@@ -1,0 +1,48 @@
+var a=1
+var b=2
+
+function add(a,b){return a+b}
+
+function bad(){
+  eval("console.log('this is unsafe')")
+}
+
+const obj = {}
+
+obj["x"] = 1
+
+obj.y = function(){
+  console.log("no semicolons",a+b)
+}
+
+setTimeout(function(){
+  console.log("callback hell starts")
+
+  setTimeout(function(){
+    console.log("nested hell")
+
+    setTimeout(function(){
+      console.log("deep nesting")
+    },100)
+  },100)
+},100)
+
+globalThis.leak = "oops"
+
+class A{
+  constructor(){
+    this.x=1
+  }
+
+  getX(){
+    return this.x
+  }
+
+  setX(x){
+    this.x=x
+  }
+}
+
+add(a,b)
+bad()
+obj.y()

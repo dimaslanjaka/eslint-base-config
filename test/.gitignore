@@ -1,0 +1,5 @@
+yarn.lock
+eslint.*.*
+/fixtures/**/*
+!/fixtures/**/*.txt
+_*
