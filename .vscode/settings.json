@@ -97,5 +97,8 @@
     "source.removeUnusedImports": "never",
     "source.sort.json": "never",
     "source.sortImports": "never"
+  },
+  "code-runner.executorMapByGlob": {
+    "*.test.*": "yarn test -- $fileNameWithoutExt"
   }
 }
