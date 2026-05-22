@@ -59,6 +59,7 @@
     "prettier-plugin-sh": "^0.18.1",
     "prettier-plugin-sql": "^0.20.0",
     "prettier-plugin-twig": "^1.0.1",
+    "react": "^19.2.6",
     "typescript": "^6.0.3",
     "typescript-eslint": "8.59.3",
     "upath": "^3.0.7"
@@ -75,6 +76,7 @@
     "@types/babel__core": "^7",
     "@types/babel__preset-env": "^7",
     "@types/fs-extra": "^11",
+    "@types/react": "^19",
     "babel-jest": "^30.4.1",
     "binary-collections": "^2.0.11",
     "husky": "^9.1.7",
