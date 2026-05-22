@@ -11,7 +11,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@dimaslanjaka/eslint-base-config": "file:D:/Repositories/eslint-base-config/release/dimaslanjaka-eslint-base-config.tgz"
+    "@dimaslanjaka/eslint-base-config": "file:../release/dimaslanjaka-eslint-base-config.tgz"
   },
   "packageManager": "yarn@4.13.0"
 }

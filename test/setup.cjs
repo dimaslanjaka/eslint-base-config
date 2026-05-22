@@ -152,7 +152,7 @@ async function setup(cache = true, debug = false) {
 
   run('yarn', ['set', 'version', '4.13.0']);
 
-  run('yarn', ['add', `${ESLINT_PACKAGE}@file:${PATHS.tgz}`]);
+  run('yarn', ['add', `${ESLINT_PACKAGE}@file:${path.relative(__dirname, PATHS.tgz)}`]);
 
   if (cache) {
     await fs.writeFile(PATHS.checksum, currentChecksum);
