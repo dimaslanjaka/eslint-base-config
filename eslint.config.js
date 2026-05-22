@@ -159,6 +159,7 @@ export default defineConfig([
     files: ['**/*.{ts,tsx,mts,cts}'],
     // extends: [tseslint.configs.recommended],
     languageOptions: {
+      parser: tseslint.parser,
       globals: baseGlobals
     },
     plugins: {
