@@ -1,12 +1,11 @@
 import { beforeAll, describe, expect, jest, test } from '@jest/globals';
-import { execSync } from 'node:child_process';
 import fs from 'fs-extra';
 import { parse } from 'jsonc-parser';
 import https from 'node:https';
 import { pipeline } from 'node:stream/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'upath';
-import setupModule, { buildPackage } from './setup.cjs';
+import setupModule, { buildPackage, run } from './setup.cjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -118,7 +117,7 @@ describe('eslint base config integration', () => {
       'eslint-base-config',
       'postinstall.cjs'
     );
-    execSync(`node "${postinstallPath}"`, { cwd: __dirname, stdio: 'inherit' });
+    run('node', [postinstallPath], { stdio: 'inherit' });
 
     const projectSettingsPath = path.join(__dirname, '..', '.vscode', 'settings.json');
     const projectSettings = await fs.readFile(projectSettingsPath, 'utf8');

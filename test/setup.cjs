@@ -186,5 +186,6 @@ module.exports = {
   runEslint,
   writeUglyCodes,
   setup,
-  buildPackage
+  buildPackage,
+  run
 };
