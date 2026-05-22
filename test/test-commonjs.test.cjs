@@ -25,10 +25,9 @@ describe('eslint base config integration', () => {
     uglyJsPath = setupModule.writeUglyCodes();
   });
 
-  test('eslint runs on ugly code without crashing', () => {
+  test('eslint reports errors on ugly code', () => {
     const result = setupModule.runEslint(uglyJsPath, { stdio: 'pipe' });
-
-    expect(result.status).not.toBe(2); // 2 = fatal error
+    expect(result.status).toBe(1); // 1 = linting errors found
   });
 
   test('eslint --fix fixes ugly code and revalidate', () => {
@@ -43,11 +42,6 @@ describe('eslint base config integration', () => {
 
     const recheck = setupModule.runEslint(uglyJsPath, { stdio: 'pipe' });
     expect(recheck.status).not.toBe(2);
-  });
-
-  test('eslint reports errors on ugly code', () => {
-    const result = setupModule.runEslint(uglyJsPath, { stdio: 'pipe' });
-    expect(result.status).toBe(1); // 1 = linting errors found
   });
 
   test('eslint does not report errors on clean code', () => {
