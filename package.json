@@ -22,7 +22,8 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "build": "tsdown && tsc -p tsconfig.dts.json",
+    "build": "tsdown && npm run build-dts && node debug-tgz.mjs",
+    "build-dts": "tsc -p tsconfig.dts.json",
     "pack": "node package.cjs"
   },
   "packageManager": "yarn@4.13.0",
