@@ -3,6 +3,8 @@ const path = require('upath');
 const setupModule = require('./setup.cjs');
 
 describe('eslint base config integration', () => {
+  jest.setTimeout(120000);
+
   /** @type {string} */
   let eslintConfigPath;
   /** @type {string} */

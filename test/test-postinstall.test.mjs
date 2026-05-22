@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, test } from '@jest/globals';
+import { beforeAll, describe, expect, jest, test } from '@jest/globals';
 import { execSync } from 'node:child_process';
 import fs from 'fs-extra';
 import { parse } from 'jsonc-parser';
@@ -83,6 +83,8 @@ expect.extend({
 });
 
 describe('eslint base config integration', () => {
+  jest.setTimeout(120000);
+
   beforeAll(async () => {
     buildPackage();
 
@@ -94,7 +96,7 @@ describe('eslint base config integration', () => {
 
     // Run the setup to generate the project structure and files
     await setupModule.setup(false);
-  }, 120000);
+  });
 
   test('test project vscode settings should be merged with module settings', async () => {
     const postInstallIndicator = path.join(
@@ -142,5 +144,5 @@ describe('eslint base config integration', () => {
     expect(parsedTestSettings['code-runner.executorMapByGlob']).toEqual(
       expect.objectContaining(parsedProjectSettings['code-runner.executorMapByGlob'] || {})
     );
-  }, 120000);
+  });
 });

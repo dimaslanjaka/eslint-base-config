@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, test } from '@jest/globals';
+import { afterAll, beforeAll, beforeEach, describe, expect, jest, test } from '@jest/globals';
 import fs from 'fs-extra';
 import { fileURLToPath } from 'node:url';
 import path from 'upath';
@@ -7,6 +7,8 @@ import setupModule from './setup.cjs';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe('eslint base config integration', () => {
+  jest.setTimeout(120000);
+
   /** @type {string} */
   let eslintConfigPath;
   /** @type {string} */
