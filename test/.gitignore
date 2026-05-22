@@ -3,3 +3,4 @@ eslint.*.*
 /fixtures/**/*
 !/fixtures/**/*.txt
 _*
+.vscode/**/*
