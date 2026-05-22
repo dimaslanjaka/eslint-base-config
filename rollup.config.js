@@ -24,7 +24,7 @@ const pkg = jsonc.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'u
  * Packages that should be bundled (not externalized)
  * @type {string[]}
  */
-export const bundledPackages = ['eslint', '@eslint/js', 'eslint-plugin-prettier', 'eslint-config-prettier'];
+export const bundledPackages = [];
 
 /**
  * List external dependencies, excluding specific packages that should be bundled
