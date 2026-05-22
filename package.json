@@ -27,9 +27,11 @@
     "prettier-plugin-sh": "^0.18.1",
     "prettier-plugin-sql": "^0.20.0",
     "prettier-plugin-twig": "^1.0.1",
+    "typescript": "^6.0.3",
     "typescript-eslint": "8.59.3"
   },
   "devDependencies": {
+    "binary-collections": "^2.0.11",
     "tar-stream": "^3.2.0"
   }
 }
