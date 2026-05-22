@@ -1,0 +1,63 @@
+import { afterAll, beforeAll, beforeEach, describe, expect, jest, test } from '@jest/globals';
+import fs from 'fs-extra';
+import { fileURLToPath } from 'node:url';
+import path from 'upath';
+import setupModule from './setup.cjs';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+describe('eslint base config integration', () => {
+  jest.setTimeout(120000);
+
+  /** @type {string} */
+  let eslintConfigPath;
+  /** @type {string} */
+  let uglyJsPath;
+
+  beforeAll(async () => {
+    await setupModule.setup();
+    eslintConfigPath = setupModule.generateEsmConfig();
+  });
+
+  afterAll(() => {
+    // Cleanup generated files
+    fs.removeSync(eslintConfigPath);
+  });
+
+  beforeEach(() => {
+    // Ensure the ugly.js file is reset before each test
+    uglyJsPath = setupModule.writeUglyCodes('ugly-tsx', 'tsx');
+  });
+
+  test('eslint reports errors on ugly code', () => {
+    const result = setupModule.runEslint(uglyJsPath, { stdio: 'pipe' });
+    expect(result.status).toBe(1); // 1 = linting errors found
+  });
+
+  test('eslint --fix fixes ugly code and revalidate', () => {
+    const original = fs.readFileSync(uglyJsPath, 'utf8');
+
+    const result = setupModule.runEslint(uglyJsPath, ['--fix'], { stdio: 'pipe' });
+
+    expect(result.status).not.toBe(2); // 2 = fatal error
+
+    const fixed = fs.readFileSync(uglyJsPath, 'utf8');
+    expect(fixed).not.toBe(original);
+
+    const recheck = setupModule.runEslint(uglyJsPath, { stdio: 'pipe' });
+    expect(recheck.status).not.toBe(2);
+  });
+
+  test('eslint does not report errors on clean code', () => {
+    // Create a clean JavaScript file
+    const cleanJsPath = path.join(path.dirname(uglyJsPath), 'clean.js');
+    fs.writeFileSync(cleanJsPath, 'const x = 1;\nconsole.log(x);\n');
+
+    const result = setupModule.runEslint(cleanJsPath, { stdio: 'pipe' });
+
+    expect(result.status).toBe(0); // 0 = no errors
+
+    // Cleanup the clean.js file
+    fs.removeSync(cleanJsPath);
+  });
+});

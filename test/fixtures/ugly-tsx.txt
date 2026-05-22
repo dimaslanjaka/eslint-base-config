@@ -1,0 +1,87 @@
+import React from "react"
+
+var state:any=0
+var data:any={}
+
+function Component(props:any){
+
+  let x:any=1
+  let y:any="2"
+
+  function click(){
+    eval("console.log('unsafe side effect')")
+    state=state+1
+    data["last"]=state
+  }
+
+  return <div onClick={click}>
+    <h1>hello {state}</h1>
+
+    <p>{x+y}</p>
+
+    {true && <span>{"conditional render"}</span>}
+
+    {false ? <div>never</div> : <div>always</div>}
+
+  </div>
+}
+
+export default function App(){
+  return (
+    <div>
+      <Component a={1} b={"2"} />
+
+      <Component a={state} b={data} />
+
+      {[1,2,3,4,5].map(function(i:any){
+        return <Component key={i} a={i} b={i*i} />
+      })}
+
+      {(() => {
+        if(state > 5){
+          return <div>
+            <h2>state too big</h2>
+            <button onClick={()=>{
+              state=0
+              data={}
+            }}>reset</button>
+          </div>
+        }else{
+          return <div>
+            <h2>ok</h2>
+          </div>
+        }
+      })()}
+
+    </div>
+  )
+}
+
+class Weird extends React.Component<any,any>{
+
+  constructor(props:any){
+    super(props)
+    this.state={x:1,y:2}
+  }
+
+  render(){
+    return <div onMouseMove={(e:any)=>{
+      this.setState({x:e.clientX,y:e.clientY})
+    }}>
+      <h1>{this.state.x + this.state.y}</h1>
+
+      <button onClick={function(){
+        console.log("class handler")
+        eval("console.log('again unsafe')")
+      }}>
+        click me
+      </button>
+
+      {this.props.children}
+    </div>
+  }
+}
+
+export { Component, Weird }
+
+(globalThis as any)["leakyReact"]=App
