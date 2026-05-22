@@ -1,0 +1,130 @@
+let ug_a_value: any = 1;
+let ug_b_text: any = "2";
+
+function ug_add_values(ug_x: any, ug_y: any) {
+  return ug_x + ug_y;
+}
+
+function ug_bad_eval_case() {
+  console.log(eval("'ugly unsafe eval still here'"));
+}
+
+const ug_object_store: any = {};
+
+ug_object_store["x"] = 1;
+
+ug_object_store.y = function () {
+  console.log("no semicolons", ug_a_value + ug_b_text);
+};
+
+function ug_start_callback_hell_chain(done: Function) {
+  setTimeout(function () {
+    console.log("callback hell starts");
+
+    setTimeout(function () {
+      console.log("nested hell");
+
+      setTimeout(function () {
+        console.log("deep nesting");
+
+        setTimeout(function () {
+          console.log("why are we still here");
+
+          setTimeout(function () {
+            console.log("send help");
+            done();
+          }, 100);
+        }, 100);
+      }, 100);
+    }, 100);
+  }, 100);
+}
+
+(globalThis as any).ug_leak_global_value = "oops";
+
+class Ug_Class_Model_A {
+  public ug_x_field: any;
+  public ug_y_field: any;
+  public ug_z_field: any;
+
+  constructor() {
+    this.ug_x_field = 1;
+    this.ug_y_field = "string";
+    this.ug_z_field = {};
+  }
+
+  ug_get_x_value() {
+    return this.ug_x_field;
+  }
+
+  ug_set_x_value(val: any) {
+    this.ug_x_field = val;
+  }
+
+  ug_weird_compute_method() {
+    return ug_add_values(this.ug_x_field, this.ug_y_field);
+  }
+}
+
+function ug_unused_helper_function_one(
+  p1: any,
+  p2: any,
+  p3: any,
+  p4: any,
+  p5: any,
+  p6: any,
+  p7: any,
+  p8: any,
+  p9: any,
+  p10: any
+) {
+  return p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10;
+}
+
+function ug_unused_helper_function_two() {
+  return ug_unused_helper_function_one(
+    1,
+    "2",
+    true,
+    null,
+    undefined,
+    {},
+    [],
+    function () {},
+    Symbol("ug"),
+    BigInt(1)
+  );
+}
+
+function ug_run_all_entry_point() {
+  console.log("result:", ug_add_values(ug_a_value, ug_b_text));
+
+  ug_bad_eval_case();
+  ug_object_store.y();
+
+  ug_unused_helper_function_two();
+
+  const ug_instance_model = new Ug_Class_Model_A();
+  ug_instance_model.ug_set_x_value(999);
+
+  console.log(ug_instance_model.ug_get_x_value());
+  console.log(ug_instance_model.ug_weird_compute_method());
+
+  for (let ug_index = 0; ug_index < 10; ug_index++) {
+    if (ug_index % 2 === 0) {
+      ug_object_store["dyn_" + ug_index] = ug_index;
+    } else {
+      ug_object_store["dyn_" + ug_index] = function () {
+        return ug_index;
+      };
+    }
+  }
+
+  try { throw new Error("ugly boom"); } catch (ug_error) {
+    console.log(ug_error);
+  } finally {
+    console.log("cleanup still ugly");
+  }
+}
+
+ug_start_callback_hell_chain(ug_run_all_entry_point);
