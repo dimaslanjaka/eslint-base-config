@@ -7,25 +7,53 @@ async function loadModules() {
   return { deepmerge, jsonc };
 }
 
+function createArrayMerge() {
+  return (destinationArray, sourceArray) => {
+    // merge + dedupe (string-safe + object-safe)
+    const seen = new Set();
+    const result = [];
+
+    for (const item of [...destinationArray, ...sourceArray]) {
+      const key = item && typeof item === 'object' ? JSON.stringify(item) : item;
+
+      if (!seen.has(key)) {
+        seen.add(key);
+        result.push(item);
+      }
+    }
+
+    return result;
+  };
+}
+
 async function main() {
   const { deepmerge, jsonc } = await loadModules();
+
   const localVSCodeSettingsPath = path.join(process.cwd(), '.vscode', 'settings.json');
   const moduleVSCodeSettingsPath = path.join(__dirname, '.vscode', 'settings.json');
+
   if (!fs.existsSync(localVSCodeSettingsPath)) {
     fs.copyFileSync(moduleVSCodeSettingsPath, localVSCodeSettingsPath);
     console.log('Copied .vscode/settings.json to the project root.');
-  } else {
-    const localSettingsContent = fs.readFileSync(localVSCodeSettingsPath, 'utf-8');
-    const moduleSettingsContent = fs.readFileSync(moduleVSCodeSettingsPath, 'utf-8');
-    const localSettings = jsonc.parse(localSettingsContent);
-    const moduleSettings = jsonc.parse(moduleSettingsContent);
-    const mergedSettings = deepmerge(localSettings, moduleSettings);
-    fs.writeFileSync(localVSCodeSettingsPath, JSON.stringify(mergedSettings, null, 2));
-    console.log('Merged .vscode/settings.json with the existing settings in the project root.');
+    return;
   }
+
+  const localSettingsContent = fs.readFileSync(localVSCodeSettingsPath, 'utf-8');
+  const moduleSettingsContent = fs.readFileSync(moduleVSCodeSettingsPath, 'utf-8');
+
+  const localSettings = jsonc.parse(localSettingsContent);
+  const moduleSettings = jsonc.parse(moduleSettingsContent);
+
+  const mergedSettings = deepmerge(localSettings, moduleSettings, {
+    arrayMerge: createArrayMerge()
+  });
+
+  fs.writeFileSync(localVSCodeSettingsPath, JSON.stringify(mergedSettings, null, 2));
+
+  console.log('Merged .vscode/settings.json with deduped arrays.');
 }
 
 main().catch((error) => {
-  console.error('Error during post-installation:', error);
+  console.error('Error during postinstall:', error);
   process.exit(1);
 });

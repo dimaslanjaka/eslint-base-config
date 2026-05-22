@@ -34,6 +34,54 @@ async function downloadFile(url, destination) {
   });
 }
 
+function findDuplicatesDeep(value, path = 'root', seen = new Map(), duplicates = []) {
+  if (Array.isArray(value)) {
+    const local = new Set();
+
+    for (let i = 0; i < value.length; i++) {
+      const item = value[i];
+
+      if (item && typeof item === 'object') {
+        findDuplicatesDeep(item, `${path}[${i}]`, seen, duplicates);
+      } else {
+        if (local.has(item)) {
+          duplicates.push({ path: `${path}[${i}]`, value: item });
+        }
+        local.add(item);
+      }
+    }
+
+    return duplicates;
+  }
+
+  if (value && typeof value === 'object') {
+    for (const [k, v] of Object.entries(value)) {
+      findDuplicatesDeep(v, `${path}.${k}`, seen, duplicates);
+    }
+  }
+
+  return duplicates;
+}
+
+expect.extend({
+  toHaveNoDeepArrayDuplicates(received) {
+    const duplicates = findDuplicatesDeep(received);
+
+    if (duplicates.length > 0) {
+      return {
+        pass: false,
+        message: () =>
+          `Found duplicate values in nested arrays:\n` + duplicates.map((d) => `- at ${d.path}: ${d.value}`).join('\n')
+      };
+    }
+
+    return {
+      pass: true,
+      message: () => 'No duplicates found in nested arrays'
+    };
+  }
+});
+
 describe('eslint base config integration', () => {
   beforeAll(async () => {
     buildPackage();
@@ -46,7 +94,7 @@ describe('eslint base config integration', () => {
 
     // Run the setup to generate the project structure and files
     await setupModule.setup(false, false);
-  }, 30000);
+  }, 120000);
 
   test('sample test to verify setup', () => {
     expect(true).toBe(true);
@@ -69,7 +117,7 @@ describe('eslint base config integration', () => {
     expect(settings['eslint.debug']).toBe(true);
     expect(settings['eslint.enable']).toBe(true);
     expect(settings['eslint.useFlatConfig']).toBe(true);
-  });
+  }, 120000);
 
   test('test project vscode settings should be merged with module settings', async () => {
     const projectSettingsPath = path.join(__dirname, '..', '.vscode', 'settings.json');
@@ -80,26 +128,21 @@ describe('eslint base config integration', () => {
     const testProjectSettings = await fs.readFile(testProjectSettingsPath, 'utf8');
     const parsedTestSettings = parse(testProjectSettings);
 
+    expect(parsedTestSettings).toHaveNoDeepArrayDuplicates();
     expect(parsedTestSettings['terminal.integrated.env.linux']).toEqual(
       expect.objectContaining(parsedProjectSettings['terminal.integrated.env.linux'] || {})
     );
-
     expect(parsedTestSettings['terminal.integrated.env.windows']).toEqual(
       expect.objectContaining(parsedProjectSettings['terminal.integrated.env.windows'] || {})
     );
-
     expect(parsedTestSettings['terminal.integrated.defaultProfile.windows']).toBe(
       parsedProjectSettings['terminal.integrated.defaultProfile.windows']
     );
-
     expect(parsedTestSettings['eslint.debug']).toBe(true);
-
     expect(parsedTestSettings['eslint.enable']).toBe(true);
-
     expect(parsedTestSettings['eslint.useFlatConfig']).toBe(true);
-
     expect(parsedTestSettings['code-runner.executorMapByGlob']).toEqual(
       expect.objectContaining(parsedProjectSettings['code-runner.executorMapByGlob'] || {})
     );
-  }, 10000);
+  }, 120000);
 });
