@@ -229,5 +229,15 @@ export default tseslint.config(
         version: 'detect'
       }
     }
-  }
+  },
+
+  // ✅ Add Jest globals only for test files
+  {
+    files: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)", "**/*.(spec|test).cjs"],
+    languageOptions: {
+      globals: {
+        ...globals.jest
+      }
+    }
+  },
 );
