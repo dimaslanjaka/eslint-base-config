@@ -2,15 +2,29 @@
   "name": "@dimaslanjaka/eslint-base-config",
   "version": "1.0.0",
   "description": "Base ESLint configuration for JavaScript projects",
-  "main": "eslint.config.mjs",
+  "main": "dist/eslint.config.cjs",
+  "module": "dist/eslint.config.mjs",
+  "types": "dist/eslint.config.d.ts",
   "files": [
     "eslint.config.mjs",
-    ".prettierrc.json"
+    ".prettierrc.json",
+    "dist"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/eslint.config.mjs",
+      "require": "./dist/eslint.config.cjs",
+      "types": "./dist/eslint.config.d.ts"
+    }
+  },
   "keywords": [],
   "author": "Dimas Lanjaka",
   "license": "ISC",
   "type": "module",
+  "scripts": {
+    "build": "tsdown && tsc -p tsconfig.dts.json",
+    "pack": "node package.cjs"
+  },
   "packageManager": "yarn@4.13.0",
   "dependencies": {
     "@eslint/eslintrc": "3.3.5",
@@ -32,6 +46,8 @@
   },
   "devDependencies": {
     "binary-collections": "^2.0.11",
-    "tar-stream": "^3.2.0"
+    "tar-stream": "^3.2.0",
+    "tsdown": "^0.22.0",
+    "unrun": "^0.3.0"
   }
 }
