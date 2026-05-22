@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('upath');
+const pkg = require('./package.json');
 
 async function loadModules() {
   const deepmerge = (await import('deepmerge')).default;
@@ -53,7 +54,19 @@ async function main() {
   console.log('Merged .vscode/settings.json with deduped arrays.');
 }
 
-main().catch((error) => {
-  console.error('Error during postinstall:', error);
-  process.exit(1);
-});
+const isJest = !!process.env.JEST_WORKER_ID;
+const indicatorFile = path.join(__dirname, 'node_modules', pkg.name, '.postinstall-run');
+if (fs.existsSync(indicatorFile) && !isJest) {
+  console.log('Postinstall script has already been run. Skipping...');
+  process.exit(0);
+}
+
+main()
+  .then(() => {
+    // Create indicator file to mark postinstall as run
+    fs.ensureFileSync(indicatorFile);
+  })
+  .catch((error) => {
+    console.error('Error during postinstall:', error);
+    process.exit(1);
+  });

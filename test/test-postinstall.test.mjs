@@ -93,14 +93,22 @@ describe('eslint base config integration', () => {
     await downloadFile(url, localPath);
 
     // Run the setup to generate the project structure and files
-    await setupModule.setup(false, false);
+    await setupModule.setup(false);
   }, 120000);
 
-  test('sample test to verify setup', () => {
-    expect(true).toBe(true);
-  });
+  test('test project vscode settings should be merged with module settings', async () => {
+    const postInstallIndicator = path.join(
+      __dirname,
+      'node_modules',
+      '@dimaslanjaka',
+      'eslint-base-config',
+      '.postinstall-run'
+    );
+    if (fs.existsSync(postInstallIndicator)) {
+      fs.rmSync(postInstallIndicator);
+    }
+    expect(fs.existsSync(postInstallIndicator)).toBe(false);
 
-  test('postinstall should merge vscode settings', () => {
     const postinstallPath = path.join(
       __dirname,
       'node_modules',
@@ -110,16 +118,6 @@ describe('eslint base config integration', () => {
     );
     execSync(`node "${postinstallPath}"`, { cwd: __dirname, stdio: 'inherit' });
 
-    const vscodeSettingsPath = path.join(__dirname, '.vscode', 'settings.json');
-    expect(fs.existsSync(vscodeSettingsPath)).toBe(true);
-
-    const settings = parse(fs.readFileSync(vscodeSettingsPath, 'utf8'));
-    expect(settings['eslint.debug']).toBe(true);
-    expect(settings['eslint.enable']).toBe(true);
-    expect(settings['eslint.useFlatConfig']).toBe(true);
-  }, 120000);
-
-  test('test project vscode settings should be merged with module settings', async () => {
     const projectSettingsPath = path.join(__dirname, '..', '.vscode', 'settings.json');
     const projectSettings = await fs.readFile(projectSettingsPath, 'utf8');
     const parsedProjectSettings = parse(projectSettings);
