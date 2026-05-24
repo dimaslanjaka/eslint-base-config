@@ -1,8 +1,8 @@
 # Auto-resolve generated checksum file conflicts
-src/.checksum.cjs merge=ours
+src/_auto_gen/checksum.cjs merge=ours
 
 # Optional: mark as generated for GitHub linguist
-# src/.checksum.cjs linguist-generated=true
+# src/_auto_gen/checksum.cjs linguist-generated=true
 
 # Normalize line endings
 * text=auto
