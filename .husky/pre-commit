@@ -1,1 +1,45 @@
+#!/usr/bin/env bash
+
+set -e
+
 npx -y lint-staged
+
+OUTPUT_FILE="src/.checksum.cjs"
+TEMP_FILE="tmp/checksums.txt"
+
+# Clear temp file
+> "$TEMP_FILE"
+
+# Hash files only inside release/ or releases/
+for dir in release releases; do
+  if [ -d "$dir" ]; then
+    find "$dir" -type f | sort | while read -r file; do
+      sha256sum "$file" >> "$TEMP_FILE"
+    done
+  fi
+done
+
+# Skip when no files found
+if [ ! -s "$TEMP_FILE" ]; then
+  echo "No release folders found"
+  rm -f "$TEMP_FILE"
+  exit 0
+fi
+
+# Generate combined hash
+FINAL_HASH=$(sha256sum "$TEMP_FILE" | awk '{print $1}')
+
+# Generate CommonJS export
+mkdir -p "$(dirname "$OUTPUT_FILE")"
+cat > "$OUTPUT_FILE" <<EOF
+const hash = "$FINAL_HASH";
+
+module.exports = hash;
+module.exports.default = hash;
+EOF
+
+rm -f "$TEMP_FILE"
+
+eslint --fix "$OUTPUT_FILE"
+
+git add "$OUTPUT_FILE"
