@@ -6,6 +6,23 @@ const setupVSCodeConfiguration = require('./setupVSCodeConfiguration.cjs');
 
 const isJest = process.env.JEST_WORKER_ID !== undefined;
 const cwd = process.cwd();
+const cwdPkgJsonPath = path.join(cwd, 'package.json');
+
+try {
+  if (fs.existsSync(cwdPkgJsonPath)) {
+    const cwdPkg = fs.readJsonSync(cwdPkgJsonPath);
+
+    if (cwdPkg?.name && cwdPkg.name === pkg.name) {
+      console.warn(
+        `Warning: cwd package.json name (${pkg.name}) matches this package. ` +
+          `Skipping postinstall to avoid conflicts.`
+      );
+      process.exit(0);
+    }
+  }
+} catch (err) {
+  console.warn('Failed to validate cwd package.json:', err);
+}
 
 const basePath =
   pkg.name === '@dimaslanjaka/eslint-base-config'
