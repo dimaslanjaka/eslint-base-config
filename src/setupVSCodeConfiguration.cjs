@@ -1,6 +1,6 @@
 const fs = require('fs-extra');
 const path = require('upath');
-const createDeduplicatingArrayMerger = require('./createDeduplicatingArrayMerger');
+const createDeduplicatingArrayMerger = require('./createDeduplicatingArrayMerger.cjs');
 
 async function importRuntimeDependencies() {
   const deepmerge = (await import('deepmerge')).default;
