@@ -164,36 +164,38 @@ export function externalPackagesFilter(source, importer, isResolved) {
 }
 
 /** @type {import('rollup').RollupOptions} */
-const _oneFile = {
-  input: './eslint.config.js',
-  output: [
-    {
-      // file: 'dist/eslint.config.mjs',
-      dir: 'dist',
-      format: 'esm',
-      // inlineDynamicImports: true,
-      exports: 'named',
-      preserveModules: true,
-      entryFileNames: entryFileNamesWithExt('mjs'),
-      chunkFileNames: chunkFileNamesWithExt('mjs')
-    },
-    {
-      // file: 'dist/eslint.config.cjs',
-      dir: 'dist',
-      format: 'cjs',
-      // inlineDynamicImports: true,
-      exports: 'named',
-      preserveModules: true,
-      entryFileNames: entryFileNamesWithExt('cjs'),
-      chunkFileNames: chunkFileNamesWithExt('cjs')
-    }
-  ],
-  plugins: [
-    resolve({ preferBuiltins: true }), // Resolve node_modules packages
-    json(), // Allow importing JSON files
-    commonjs() // Convert CommonJS modules to ES6
-  ],
-  external: externalPackagesFilter
-};
+function createOneFileConfig(input) {
+  return {
+    input,
+    output: [
+      {
+        // file: 'dist/eslint.config.mjs',
+        dir: 'dist',
+        format: 'esm',
+        // inlineDynamicImports: true,
+        exports: 'named',
+        preserveModules: true,
+        entryFileNames: entryFileNamesWithExt('mjs'),
+        chunkFileNames: chunkFileNamesWithExt('mjs')
+      },
+      {
+        // file: 'dist/eslint.config.cjs',
+        dir: 'dist',
+        format: 'cjs',
+        // inlineDynamicImports: true,
+        exports: 'named',
+        preserveModules: true,
+        entryFileNames: entryFileNamesWithExt('cjs'),
+        chunkFileNames: chunkFileNamesWithExt('cjs')
+      }
+    ],
+    plugins: [
+      resolve({ preferBuiltins: true }), // Resolve node_modules packages
+      json(), // Allow importing JSON files
+      commonjs() // Convert CommonJS modules to ES6
+    ],
+    external: externalPackagesFilter
+  };
+}
 
-export default _oneFile;
+export default [createOneFileConfig('./eslint.config.js')];
