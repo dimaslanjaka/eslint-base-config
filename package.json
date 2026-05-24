@@ -34,7 +34,7 @@
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles --forceExit --bail 1",
     "test:coverage": "npm test -- --coverage",
     "lint": "eslint \"src/**/*\" --fix",
-    "postinstall": "npx -y binary-collections@https://raw.githubusercontent.com/dimaslanjaka/bin/master/releases/bin.tgz node-executor --exit-code=0 postinstall.cjs",
+    "postinstall": "npx -y binary-collections@https://raw.githubusercontent.com/dimaslanjaka/bin/ac7960a/releases/bin.tgz node-executor --exit-code=0 postinstall.cjs",
     "clean": "npx -y rimraf dist tmp"
   },
   "packageManager": "yarn@4.13.0",
