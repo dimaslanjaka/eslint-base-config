@@ -17,13 +17,11 @@ on:
   push:
     paths-ignore:
       - '**/*.tgz'
-      - '**/*.gz'
-      - '**/release*/**'
-      - '**/dist/**'
-      - '**garbage-collector**'
-      - '**codeql**'
-      - '**/.github/workflows/tester.yml'
+      - '**/*.{gz,tar.gz}'
+      - '**/{dist,release,releases}/**'
       - '**/*checksum*'
+      - '**/{garbage-collector,codeql}/**'
+      - '.github/workflows/tester.yml'
   workflow_dispatch:
 
 # run single job
