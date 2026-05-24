@@ -195,12 +195,18 @@ function createOneFileConfig(input, outputConfig) {
       }
     ],
     plugins: [
-      resolve({ preferBuiltins: true }), // Resolve node_modules packages
-      json(), // Allow importing JSON files
-      commonjs() // Convert CommonJS modules to ES6
+      // Resolve node modules, preferring built-in modules and supporting various extensions
+      resolve({ preferBuiltins: true, extensions: ['.js', '.cjs', '.mjs', '.json', '.node'] }),
+      // Allow Rollup to import JSON files, which is useful for reading package.json and other config files
+      json(),
+      // Convert CommonJS modules to ES6, so they can be included in the Rollup bundle
+      commonjs()
     ],
     external: externalPackagesFilter
   };
 }
 
-export default [createOneFileConfig('./eslint.config.js')];
+export default [
+  createOneFileConfig('./eslint.config.js'),
+  createOneFileConfig('./src/postinstall.cjs', { file: 'postinstall.cjs', format: 'cjs', exports: 'default' })
+];
