@@ -23,6 +23,7 @@ on:
       - '**/release/**'
       - '**/releases/**'
       - '**/_auto*/**'
+      - '**/.husky/**'
       - '**/garbage-collector/**'
       - '**/codeql/**'
       - '.github/workflows/tester.yml'
