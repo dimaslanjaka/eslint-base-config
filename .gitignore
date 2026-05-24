@@ -16,11 +16,13 @@ yarn.lock
 .env
 
 # =========================
-# Build output
+# Auto generated files
 # =========================
 dist/
 coverage/
 *.tsbuildinfo
+postinstall.*
+!src/postinstall.*
 
 # =========================
 # Logs / temp
