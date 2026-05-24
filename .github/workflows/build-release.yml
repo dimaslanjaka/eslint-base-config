@@ -23,15 +23,6 @@ on:
       - '**garbage-collector**'
       - '**codeql**'
       - '**/.github/workflows/tester.yml'
-  pull_request:
-    types:
-      - closed
-    paths-ignore:
-      - '**/release*/**'
-      - '**/dist/**'
-      - '**/*.tgz'
-      - '**/*.gz'
-      - '**/test*/**'
       - '**/*checksum*'
   workflow_dispatch:
 
