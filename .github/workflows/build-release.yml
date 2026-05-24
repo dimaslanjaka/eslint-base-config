@@ -17,10 +17,14 @@ on:
   push:
     paths-ignore:
       - '**/*.tgz'
-      - '**/*.{gz,tar.gz}'
-      - '**/{dist,release,releases}/**'
+      - '**/*.gz'
+      - '**/*.tar.gz'
+      - '**/dist/**'
+      - '**/release/**'
+      - '**/releases/**'
       - '**/*checksum*'
-      - '**/{garbage-collector,codeql}/**'
+      - '**/garbage-collector/**'
+      - '**/codeql/**'
       - '.github/workflows/tester.yml'
   workflow_dispatch:
 
