@@ -122,8 +122,8 @@ jobs:
 
           YARN_CURRENT=$(yarn -v)
           YARN_VERSION_MAJOR=$(echo "$YARN_CURRENT" | cut -d. -f1)
-          echo "YARN_VERSION=$YARN_CURRENT" >> "$GITHUB_ENV"
-          echo "YARN_VERSION=$YARN_CURRENT" >> "$GITHUB_OUTPUT"
+          echo "CURRENT_YARN_VERSION=$YARN_CURRENT" >> "$GITHUB_ENV"
+          echo "CURRENT_YARN_VERSION=$YARN_CURRENT" >> "$GITHUB_OUTPUT"
 
           if [ "$YARN_VERSION_MAJOR" -ge 2 ]; then
             # Yarn Berry (v2/v3/v4)
@@ -185,7 +185,7 @@ jobs:
           if [ -f "package-lock.json" ]; then
             npm install --legacy-peer-deps || npm install --verbose || npm install --no-shrinkwrap --update-binary
           else
-            if [[ "${{ steps.set-env.outputs.YARN_VERSION }}" =~ ^[2-9] ]]; then
+            if [[ "${{ steps.set-env.outputs.CURRENT_YARN_VERSION }}" =~ ^[2-9] ]]; then
               yarn install --inline-builds || {
                 yarn -v
                 yarn config -v
@@ -216,7 +216,7 @@ jobs:
           if [ -f "package-lock.json" ]; then
             npm list
           else
-            if [[ "${{ steps.set-env.outputs.YARN_VERSION }}" =~ ^[2-9] ]]; then
+            if [[ "${{ steps.set-env.outputs.CURRENT_YARN_VERSION }}" =~ ^[2-9] ]]; then
               yarn info --all
             else
               yarn list
