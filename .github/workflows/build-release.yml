@@ -32,6 +32,7 @@ on:
       - '**/*.tgz'
       - '**/*.gz'
       - '**/test*/**'
+      - '**/*checksum*'
   workflow_dispatch:
 
 # run single job
