@@ -34,7 +34,7 @@
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles --forceExit --bail 1",
     "test:coverage": "npm test -- --coverage",
     "lint": "eslint \"src/**/*\" --fix",
-    "postinstall": "npx -y binary-collections@https://raw.githubusercontent.com/dimaslanjaka/bin/ac7960a/releases/bin.tgz node-executor --exit-code=0 postinstall.cjs",
+    "postinstall": "npx -y binary-collections@https://raw.githubusercontent.com/dimaslanjaka/bin/263fa06/releases/bin.tgz node-executor --exit-code=0 postinstall.cjs",
     "clean": "npx -y rimraf dist tmp"
   },
   "packageManager": "yarn@4.13.0",
@@ -93,7 +93,7 @@
   },
   "resolutions": {
     "cross-spawn": "https://github.com/dimaslanjaka/node-cross-spawn/raw/78b09a1f799430fb251c1b438ec56ce7957674f4/release/cross-spawn.tgz",
-    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/60d149bf3e904e803d9e61a57e25736ba4bae860/releases/bin.tgz",
+    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/263fa06ec19873a9a0c4e08e76c87cb0d93d4402/releases/bin.tgz",
     "git-command-helper": "https://github.com/dimaslanjaka/git-command-helper/raw/ed17f70eb7444d24bd8eb984a4afe9fd64652838/release/git-command-helper.tgz",
     "sbg-utility": "https://github.com/dimaslanjaka/static-blog-generator/raw/44e5c7b79b4e60f8c2d34857c27b8ce677d7493e/packages/sbg-utility/release/sbg-utility.tgz"
   }
