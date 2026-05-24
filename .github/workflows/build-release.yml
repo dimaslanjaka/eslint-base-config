@@ -26,6 +26,9 @@ on:
       - '**/garbage-collector/**'
       - '**/codeql/**'
       - '.github/workflows/tester.yml'
+      - '**/*.log'
+      - '**/*.txt'
+      - '**/*.zip'
   workflow_dispatch:
 
 # run single job
