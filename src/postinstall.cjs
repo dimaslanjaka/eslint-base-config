@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const path = require('upath');
 const pkg = require('../package.json');
-const { hash } = require('./.checksum.cjs');
+const { hash } = require('./_auto_gen/checksum.cjs');
 const setupVSCodeConfiguration = require('./setupVSCodeConfiguration.cjs');
 
 const isJest = process.env.JEST_WORKER_ID !== undefined;

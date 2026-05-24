@@ -4,7 +4,7 @@ set -e
 
 npx -y lint-staged
 
-OUTPUT_FILE="src/.checksum.cjs"
+OUTPUT_FILE="src/_auto_gen/checksum.cjs"
 TEMP_FILE="tmp/checksums.txt"
 
 # Clear temp file

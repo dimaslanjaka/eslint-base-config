@@ -22,7 +22,7 @@ on:
       - '**/dist/**'
       - '**/release/**'
       - '**/releases/**'
-      - '**/*checksum*'
+      - '**/_auto_gen*'
       - '**/garbage-collector/**'
       - '**/codeql/**'
       - '.github/workflows/tester.yml'
