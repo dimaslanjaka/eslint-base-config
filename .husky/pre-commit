@@ -35,7 +35,9 @@ cat > "$OUTPUT_FILE" <<EOF
 const hash = "$FINAL_HASH";
 
 module.exports = hash;
-module.exports.default = hash;
+module.exports = {
+  hash,
+};
 EOF
 
 rm -f "$TEMP_FILE"
