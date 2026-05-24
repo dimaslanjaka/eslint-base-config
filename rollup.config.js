@@ -163,11 +163,16 @@ export function externalPackagesFilter(source, importer, isResolved) {
   return false; // fallback: bundle it
 }
 
-/** @type {import('rollup').RollupOptions} */
-function createOneFileConfig(input) {
+/**
+ * Creates a Rollup configuration for a single entry file, outputting both ESM and CJS formats.
+ * @param {import('rollup').InputOptions} input
+ * @param {import('rollup').OutputOptions} outputConfig
+ * @returns {import('rollup').RollupOptions}
+ */
+function createOneFileConfig(input, outputConfig) {
   return {
     input,
-    output: [
+    output: outputConfig || [
       {
         // file: 'dist/eslint.config.mjs',
         dir: 'dist',
