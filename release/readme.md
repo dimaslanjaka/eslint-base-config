@@ -2,9 +2,9 @@
 ## Releases
 | version | tarball url |
 | :--- | :--- |
-| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/236dd25/release/dimaslanjaka-eslint-base-config-1.0.0.tgz |
+| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/7708635/release/dimaslanjaka-eslint-base-config-1.0.0.tgz |
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/master/release/dimaslanjaka-eslint-base-config-1.0.0.tgz |
-| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/236dd25/release/dimaslanjaka-eslint-base-config.tgz |
+| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/7708635/release/dimaslanjaka-eslint-base-config.tgz |
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/master/release/dimaslanjaka-eslint-base-config.tgz |
 
 use this tarball with `resolutions`:

@@ -1,4 +1,4 @@
-const hash = '32453f4966977dd09487739e07fab7ef0cb09c81d7c31dd057776ba48d4bdb12';
+const hash = '5392ab5c23d6a8386fbfee02a38bdad65b1eb9cf8520bac79a6e19abcfb0560e';
 
 module.exports = hash;
 module.exports = {
