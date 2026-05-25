@@ -25,8 +25,24 @@ function hashFiles(files) {
   return hash.digest('hex');
 }
 
+function hasGlobChars(p) {
+  return /[*?[{\\]!]/.test(p);
+}
+
+async function resolvePattern(pattern) {
+  if (path.isAbsolute(pattern) && !hasGlobChars(pattern)) {
+    return (await fs.pathExists(pattern)) ? [pattern] : [];
+  }
+
+  return glob(pattern, {
+    dot: true,
+    nodir: true,
+    ignore: ['**/tmp/**', '**/dist/**', '**/node_modules/**', '**/.cache/**']
+  });
+}
+
 async function collectFiles(patterns) {
-  const results = await Promise.all(patterns.map((pattern) => glob(pattern, { dot: true, nodir: true })));
+  const results = await Promise.all(patterns.map(resolvePattern));
 
   return [...new Set(results.flat())];
 }
@@ -62,7 +78,7 @@ async function setup() {
   await execAsync('yarn', ['pack']);
 }
 
-const patterns = ['eslint.config.js', 'package.json', 'release/*.tgz'];
+const patterns = [path.resolve(__dirname, 'eslint.config.js'), path.resolve(__dirname, 'package.json')];
 
 export default async function main() {
   const files = await collectFiles(patterns);
