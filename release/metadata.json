@@ -1,19 +1,19 @@
 {
   "/release/dimaslanjaka-eslint-base-config-1.0.0.tgz": {
     "integrity": {
-      "sha1": "d2d5a0897a7c56a1e546185ecc50ae3eb3c16302",
-      "sha256": "rEX+ATqneo3/3G9bB01PsWgAY/nvV11CjqCyzBUQMaU=",
-      "md5": "99cddc3a7ce3e33fa50349c4fd4a2216",
-      "sha512": "DEiX9iLXu0c6NxW7aa5J4U8dirf1C5N2HDjTL+9MfDtSa/wuY8XYWkr/urW4K0X5qMwVgzKV0mCX+mU9nQofZQ=="
+      "sha1": "debfff1e4905e8f994e7d8bec2d3e87c66440be1",
+      "sha256": "I8EHHD3G/d3pkkAu4rwJdCg/unbg3Ka9Gxv0269nTg0=",
+      "md5": "1c6bc6ed879fae978efc9fc0527b3953",
+      "sha512": "+UZT0pdJ6RavrFcz+/XMSe5HttFxQxhnjtAWmw0gGWfx7aVX/26+pX7Bye6dB/W0wE67wM0yXPeCJkbRL7rltQ=="
     },
     "size": "24.45 KB"
   },
   "/release/dimaslanjaka-eslint-base-config.tgz": {
     "integrity": {
-      "sha1": "d2d5a0897a7c56a1e546185ecc50ae3eb3c16302",
-      "sha256": "rEX+ATqneo3/3G9bB01PsWgAY/nvV11CjqCyzBUQMaU=",
-      "md5": "99cddc3a7ce3e33fa50349c4fd4a2216",
-      "sha512": "DEiX9iLXu0c6NxW7aa5J4U8dirf1C5N2HDjTL+9MfDtSa/wuY8XYWkr/urW4K0X5qMwVgzKV0mCX+mU9nQofZQ=="
+      "sha1": "debfff1e4905e8f994e7d8bec2d3e87c66440be1",
+      "sha256": "I8EHHD3G/d3pkkAu4rwJdCg/unbg3Ka9Gxv0269nTg0=",
+      "md5": "1c6bc6ed879fae978efc9fc0527b3953",
+      "sha512": "+UZT0pdJ6RavrFcz+/XMSe5HttFxQxhnjtAWmw0gGWfx7aVX/26+pX7Bye6dB/W0wE67wM0yXPeCJkbRL7rltQ=="
     },
     "size": "24.45 KB"
   }
