@@ -13,7 +13,12 @@ async function setupVSCodeConfiguration(projectRoot = process.cwd()) {
   const { deepmerge, jsonc } = await importRuntimeDependencies();
 
   const projectSettingsPath = path.join(projectRoot, '.vscode', 'settings.json');
-  const packageSettingsPath = path.join(__dirname, '..', '.vscode', 'settings.json');
+  const packageSettingsPath = [path.join(__dirname, '.vscode', 'settings.json'), path.join(__dirname, '..', '.vscode', 'settings.json')].filter(fs.existsSync)[0];
+
+  if (!packageSettingsPath) {
+    console.warn('No .vscode/settings.json found in the package. Skipping VSCode configuration setup.');
+    return;
+  }
 
   fs.ensureDirSync(path.dirname(projectSettingsPath));
   fs.ensureDirSync(path.dirname(packageSettingsPath));
