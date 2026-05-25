@@ -45,3 +45,11 @@ rm -f "$TEMP_FILE"
 eslint --fix "$OUTPUT_FILE"
 
 git add "$OUTPUT_FILE"
+
+# Register the merge driver for the checksum file
+if ! git config --get merge.resolve_hash.driver >/dev/null; then
+  git config merge.resolve_hash.name "Resolve generated checksum"
+  git config merge.resolve_hash.driver true
+
+  echo "[OK] registered resolve_hash merge driver"
+fi

@@ -1,5 +1,12 @@
 # Auto-resolve generated checksum file conflicts
-src/_auto_gen/checksum.cjs merge=ours
+# Special cases, run this to set up the merge driver:
+# git config merge.resolve_hash.name "Resolve generated checksum"
+# Then set the driver command based on your shell:
+# git config merge.resolve_hash.driver true
+# To verify, run:
+# git config --local --get-regexp "^merge"
+# git check-attr --all -- src/_auto_gen/checksum.cjs
+src/_auto_gen/checksum.cjs eol=lf merge=resolve_hash
 
 # Normalize line endings
 * text=auto
