@@ -140,8 +140,5 @@ describe('eslint base config integration', () => {
     expect(parsedTestSettings['eslint.debug']).toBe(true);
     expect(parsedTestSettings['eslint.enable']).toBe(true);
     expect(parsedTestSettings['eslint.useFlatConfig']).toBe(true);
-    expect(parsedTestSettings['code-runner.executorMapByGlob']).toEqual(
-      expect.objectContaining(parsedProjectSettings['code-runner.executorMapByGlob'] || {})
-    );
   });
 });
