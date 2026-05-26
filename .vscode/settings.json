@@ -89,7 +89,7 @@
   ],
   "eslint.useFlatConfig": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "always",
+    "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never",
     "source.fixAll.ts": "never",
     "source.addMissingImports.ts": "never",
