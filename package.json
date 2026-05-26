@@ -1,14 +1,14 @@
 {
   "name": "@dimaslanjaka/eslint-base-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Base ESLint configuration for JavaScript projects",
   "main": "dist/eslint.config.cjs",
   "module": "dist/eslint.config.mjs",
   "types": "dist/eslint.config.d.ts",
   "bin": {
     "ebc-postinstall": "postinstall.cjs",
-    "init-ebc": "postinstall.cjs",
-    "eslint-config-base": "postinstall.cjs"
+    "eslint-config-base": "postinstall.cjs",
+    "init-ebc": "postinstall.cjs"
   },
   "files": [
     "./eslint.config.js",
@@ -39,6 +39,9 @@
     "postinstall": "npx -y binary-collections@https://raw.githubusercontent.com/dimaslanjaka/bin/263fa06/releases/bin.tgz node-executor --exit-code=0 postinstall.cjs",
     "postinstall2": "node postinstall.cjs",
     "clean": "npx -y rimraf dist tmp"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "packageManager": "yarn@4.13.0",
   "dependencies": {
