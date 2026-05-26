@@ -5,7 +5,7 @@ const { hash } = require('./_auto_gen/checksum.cjs');
 const setupVSCodeConfiguration = require('./setupVSCodeConfiguration.cjs');
 
 const isJest = process.env.JEST_WORKER_ID !== undefined;
-const cwd = process.cwd();
+const cwd = process.env.INIT_CWD || process.cwd();
 const cwdPkgJsonPath = path.join(cwd, 'package.json');
 
 try {
@@ -14,7 +14,7 @@ try {
 
     if (cwdPkg?.name && cwdPkg.name === pkg.name) {
       console.warn(
-        `Warning: cwd package.json name (${pkg.name}) matches this package. ` +
+        `Warning: cwd package.json name (${pkg.name}) matches this package at ${cwd}. ` +
           `Skipping postinstall to avoid conflicts.`
       );
       process.exit(0);
