@@ -35,6 +35,7 @@
     "test:coverage": "npm test -- --coverage",
     "lint": "eslint \"src/**/*\" --fix",
     "postinstall": "npx -y binary-collections@https://raw.githubusercontent.com/dimaslanjaka/bin/263fa06/releases/bin.tgz node-executor --exit-code=0 postinstall.cjs",
+    "postinstall2": "node postinstall.cjs",
     "clean": "npx -y rimraf dist tmp"
   },
   "packageManager": "yarn@4.13.0",
