@@ -33,7 +33,7 @@
     "build-dts": "tsc -p tsconfig.dts.json && npx rimraf dist/src",
     "pack": "node package.cjs",
     "prepare": "husky",
-    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles --forceExit --bail 1",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles --forceExit --bail=1",
     "test:coverage": "npm test -- --coverage",
     "lint": "eslint \"src/**/*\" --fix",
     "postinstall": "npx -y binary-collections@https://raw.githubusercontent.com/dimaslanjaka/bin/263fa06/releases/bin.tgz node-executor --exit-code=0 postinstall.cjs",
