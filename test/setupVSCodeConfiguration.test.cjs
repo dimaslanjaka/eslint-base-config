@@ -161,4 +161,26 @@ describe('setupVSCodeConfiguration', () => {
 
     expect(merged['terminal.integrated.profiles.windows']['Git Bash']).toBeDefined();
   });
+
+  test('should merge editor.codeActionsOnSave with custom entries preserved', async () => {
+    const initialSettings = {
+      'editor.codeActionsOnSave': {
+        'source.fixAll.stylelint': 'always'
+      }
+    };
+
+    await fs.writeJson(settingsPath, initialSettings, {
+      spaces: 2
+    });
+
+    await setupVSCodeConfiguration(tempRoot);
+
+    const merged = await fs.readJson(settingsPath);
+
+    expect(merged['editor.codeActionsOnSave']['source.fixAll.stylelint']).toBe('always');
+
+    expect(merged['editor.codeActionsOnSave']['source.fixAll.eslint']).toBe('explicit');
+
+    expect(merged['editor.codeActionsOnSave']['source.organizeImports']).toBe('never');
+  });
 });

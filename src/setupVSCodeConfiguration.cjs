@@ -46,7 +46,8 @@ async function setupVSCodeConfiguration(projectRoot = process.cwd()) {
     'terminal.integrated.profiles.windows',
     'eslint.probe',
     'eslint.validate',
-    'eslint.useFlatConfig'
+    'eslint.useFlatConfig',
+    'editor.codeActionsOnSave'
   ];
 
   const mergedSettings = { ...projectSettings };
