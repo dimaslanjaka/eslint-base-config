@@ -87,6 +87,14 @@ function runEslint(file, argsOrOptions = [], options = {}) {
   const isArgsArray = Array.isArray(argsOrOptions);
   const args = isArgsArray ? argsOrOptions : [];
   const opts = isArgsArray ? options : argsOrOptions;
+  if (!args.includes('--config')) {
+    const configPath = [path.join(__dirname, 'eslint.config.cjs'), path.join(__dirname, 'eslint.config.mjs')].find(
+      fs.existsSync
+    );
+    if (fs.existsSync(configPath)) {
+      args.push('--config', configPath);
+    }
+  }
   return run('npx', ['-y', 'eslint', ...args, file], { ...opts, throws: false });
 }
 
