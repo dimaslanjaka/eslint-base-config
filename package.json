@@ -6,7 +6,9 @@
   "module": "dist/eslint.config.mjs",
   "types": "dist/eslint.config.d.ts",
   "bin": {
-    "ebc-postinstall": "postinstall.cjs"
+    "ebc-postinstall": "postinstall.cjs",
+    "init-ebc": "postinstall.cjs",
+    "eslint-config-base": "postinstall.cjs"
   },
   "files": [
     "./eslint.config.js",
