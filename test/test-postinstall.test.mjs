@@ -106,7 +106,7 @@ describe('eslint base config integration', () => {
       '.postinstall-run'
     );
     if (fs.existsSync(postInstallIndicator)) {
-      fs.rmSync(postInstallIndicator);
+      fs.rmSync(postInstallIndicator, { recursive: true, force: true });
     }
     expect(fs.existsSync(postInstallIndicator)).toBe(false);
 
