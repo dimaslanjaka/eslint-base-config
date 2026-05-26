@@ -207,6 +207,7 @@ function createOneFileConfig(input, outputConfig) {
 }
 
 export default [
-  createOneFileConfig('./eslint.config.js'),
-  createOneFileConfig('./src/postinstall.cjs', { file: 'postinstall.cjs', format: 'cjs', exports: 'default' })
+  createOneFileConfig('./eslint.config.js', { file: 'dist/eslint.config.mjs', format: 'esm', exports: 'default' }),
+  createOneFileConfig('./eslint.config.js', { file: 'dist/eslint.config.cjs', format: 'cjs', exports: 'default' }),
+  createOneFileConfig('./src/postinstall.cjs', { file: 'postinstall.cjs', format: 'cjs', exports: 'auto' })
 ];
