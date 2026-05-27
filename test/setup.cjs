@@ -162,9 +162,8 @@ async function setup(cache = true, debug = false) {
 
   run('yarn', ['add', `${ESLINT_PACKAGE}@file:${path.relative(__dirname, PATHS.tgz)}`]);
 
-  if (cache) {
-    await fs.writeFile(PATHS.checksum, currentChecksum);
-  }
+  // always update checksum after installation to ensure it reflects the current state
+  await fs.writeFile(PATHS.checksum, currentChecksum);
 
   log('setup: Completed');
 
