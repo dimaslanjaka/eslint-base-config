@@ -324,6 +324,9 @@ export default defineConfig([
         }
       ],
 
+      // allow overloads without implementation signature
+      '@typescript-eslint/unified-signatures': 'off',
+
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off'
     }
