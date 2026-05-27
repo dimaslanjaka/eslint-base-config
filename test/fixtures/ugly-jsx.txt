@@ -1,31 +1,79 @@
-import React from "react"
+import React, {
+  useCallback,
+  useMemo,
+  useState
+} from "react"
 
-let ug_state = 0
-let ug_data = {}
+const ugAlwaysTrue = Math.random() > -1
+const ugAlwaysFalse = Math.random() < -1
+
+function useUglyState(initialState = 0) {
+  const [ugState, setUgState] = useState(initialState)
+  const [ugData, setUgData] = useState({})
+
+  const ugClick = useCallback(() => {
+    console.log("clicked")
+
+    setUgState(function (prev) {
+      const next = prev + 1
+
+      setUgData(function (old) {
+        return {
+          ...old,
+          last: next
+        }
+      })
+
+      return next
+    })
+  }, [])
+
+  const reset = useCallback(() => {
+    setUgState(0)
+    setUgData({})
+  }, [])
+
+  return {
+    ugState,
+    ugData,
+    ugClick,
+    reset
+  }
+}
 
 function UgComponent(props) {
+  const {
+    ugState,
+    ugClick
+  } = useUglyState(props.value || 0)
 
-  function ugClick() {
-    console.log("clicked")
-    ug_state = ug_state + 1
-    ug_data["last"] = ug_state
-  }
+  const computedValue = useMemo(function () {
+    return props.value + ugState
+  }, [props.value, ugState])
 
   return (
     <div onClick={ugClick}>
 
-      <h1>{"ugly jsx header"} {ug_state}</h1>
+      <h1>{"ugly jsx header"} {ugState}</h1>
 
-      <p>{props.value + ug_state}</p>
+      <p>{computedValue}</p>
 
-      {true && <span>{"always rendered ugly span"}</span>}
+      {ugAlwaysTrue && (
+        <span>{"always rendered ugly span"}</span>
+      )}
 
-      {false ? <div>{"never rendered"}</div> : <div>{"always rendered"}</div>}
+      {ugAlwaysFalse && (
+        <div>{"never rendered"}</div>
+      )}
 
-      <button onClick={function () {
-        ugClick()
-        eval("console.log('still unsafe but valid')")
-      }}>
+      <div>{"always rendered"}</div>
+
+      <button
+        onClick={function () {
+          ugClick()
+          // eval("console.log('still unsafe but valid')")
+        }}
+      >
         click me
       </button>
 
@@ -34,39 +82,57 @@ function UgComponent(props) {
 }
 
 export default function UgApp() {
+  const {
+    ugState,
+    ugData,
+    ugClick,
+    reset
+  } = useUglyState(0)
 
   return (
     <div>
 
       <UgComponent value={1} />
 
-      <UgComponent value={ug_state} />
+      <UgComponent value={ugState} />
 
       {[1, 2, 3, 4].map(function (i) {
-        return <UgComponent key={i} value={i * i} />
+        return (
+          <UgComponent
+            key={i}
+            value={i * i}
+          />
+        )
       })}
 
-      {(() => {
-        if (ug_state > 3) {
-          return (
-            <div>
-              <h2>{"state big"}</h2>
-              <button onClick={function () {
-                ug_state = 0
-                ug_data = {}
-              }}>
-                reset
-              </button>
-            </div>
-          )
-        } else {
-          return (
-            <div>
-              <h2>{"state ok"}</h2>
-            </div>
-          )
-        }
-      })()}
+      {(ugState > 3) && (
+        <div>
+          <h2>{"state big"}</h2>
+
+          <button
+            onClick={function () {
+              reset()
+            }}
+          >
+            reset
+          </button>
+        </div>
+      )}
+
+      {(ugState <= 3) && (
+        <div>
+          <h2>{"state ok"}</h2>
+
+          <button
+            onClick={function () {
+              ugClick()
+              console.log(ugData)
+            }}
+          >
+            grow
+          </button>
+        </div>
+      )}
 
     </div>
   )
@@ -76,25 +142,40 @@ class UgWeirdClass extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = { x: 1, y: 2 }
+
+    this.state = {
+      x: 1,
+      y: 2
+    }
   }
 
   render() {
     return (
-      <div onMouseMove={(e) => {
-        this.setState({ x: e.clientX, y: e.clientY })
-      }}>
+      <div
+        onMouseMove={(e) => {
+          this.setState({
+            x: e.clientX,
+            y: e.clientY
+          })
+        }}
+      >
 
         <h1>{this.state.x + this.state.y}</h1>
 
-        <button onClick={function () {
-          console.log("class click")
-          eval("console.log('ugly class eval')")
-        }}>
+        <button
+          onClick={function () {
+            console.log("class click")
+            // eval("console.log('ugly class eval')")
+          }}
+        >
           ugly button
         </button>
 
-        {this.props.children}
+        {this.props.children && (
+          <div>
+            {this.props.children}
+          </div>
+        )}
 
       </div>
     )
@@ -102,3 +183,4 @@ class UgWeirdClass extends React.Component {
 }
 
 globalThis.ug_jsx_leak = UgApp
+globalThis.ug_jsx_weird = UgWeirdClass
