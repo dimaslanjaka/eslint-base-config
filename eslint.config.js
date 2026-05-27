@@ -14,15 +14,21 @@ import { defineConfig } from 'eslint/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 const cwd = process.env.INIT_CWD || process.cwd();
+
 let prettierrcPath = path.resolve(cwd, '.prettierrc.json');
+
 if (!fs.existsSync(prettierrcPath)) {
   prettierrcPath = path.resolve(__dirname, '.prettierrc.json');
 }
+
 const prettierrc = parseJSONC(fs.readFileSync(prettierrcPath, 'utf8'));
+
 const isProjectESM = (() => {
   try {
     const pkgPath = path.resolve(cwd, 'package.json');
+
     if (fs.existsSync(pkgPath)) {
       const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
       return pkg.type === 'module';
@@ -30,6 +36,7 @@ const isProjectESM = (() => {
   } catch {
     // ignore
   }
+
   return false;
 })();
 
@@ -89,7 +96,6 @@ export default defineConfig([
 
     languageOptions: {
       ecmaVersion: 'latest',
-      sourceType: 'module',
 
       globals: {
         ...baseGlobals,
@@ -123,6 +129,7 @@ export default defineConfig([
       parser: babelParser,
       ecmaVersion: 'latest',
       sourceType: isProjectESM ? 'module' : 'commonjs',
+
       globals: baseGlobals,
 
       parserOptions: {
@@ -136,17 +143,76 @@ export default defineConfig([
     },
 
     rules: {
-      ...commonRules,
-      ...unusedRules,
-
       // disallow require in ESM
+      ...(isProjectESM
+        ? {
+            'no-restricted-syntax': [
+              'error',
+              {
+                selector: 'CallExpression[callee.name="require"]',
+                message: 'require() is not allowed in ESM. Use import instead.'
+              }
+            ]
+          }
+        : {})
+    }
+  },
+
+  // =========================
+  // JSX
+  // =========================
+  {
+    files: ['**/*.jsx'],
+
+    languageOptions: {
+      parser: babelParser,
+
+      globals: baseGlobals,
+
+      parserOptions: {
+        requireConfigFile: false,
+
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+
+        ecmaFeatures: {
+          jsx: true
+        },
+
+        babelOptions: {
+          presets: ['@babel/preset-react']
+        }
+      }
+    },
+
+    plugins: {
+      prettier: prettierPlugin,
+      react,
+      'react-hooks': reactHooks
+    },
+
+    rules: {
+      ...commonRules,
+      ...react.configs.recommended.rules,
+      ...react.configs['jsx-runtime'].rules,
+      ...reactHooks.configs.recommended.rules,
+
       'no-restricted-syntax': [
         'error',
         {
           selector: 'CallExpression[callee.name="require"]',
           message: 'require() is not allowed in ESM. Use import instead.'
         }
-      ]
+      ],
+
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off'
+    },
+
+    settings: {
+      react: {
+        version: 'detect'
+      }
     }
   },
 
@@ -157,16 +223,23 @@ export default defineConfig([
     files: ['**/*.mjs'],
 
     languageOptions: {
+      parser: babelParser,
       ecmaVersion: 'latest',
       sourceType: 'module',
-      globals: baseGlobals
+
+      globals: baseGlobals,
+
+      parserOptions: {
+        requireConfigFile: false,
+
+        babelOptions: {
+          presets: ['@babel/preset-env'],
+          plugins: ['@babel/plugin-syntax-import-assertions']
+        }
+      }
     },
 
     rules: {
-      ...commonRules,
-      ...unusedRules,
-
-      // disallow require in ESM
       'no-restricted-syntax': [
         'error',
         {
@@ -184,8 +257,9 @@ export default defineConfig([
     files: ['**/*.cjs'],
 
     languageOptions: {
-      sourceType: 'commonjs',
       parser: babelParser,
+      ecmaVersion: 'latest',
+      sourceType: 'commonjs',
 
       globals: globals.node,
 
@@ -199,9 +273,6 @@ export default defineConfig([
     },
 
     rules: {
-      ...commonRules,
-      ...unusedRules,
-
       'no-var-requires': 'off',
 
       // disallow ESM import in CJS
@@ -225,7 +296,7 @@ export default defineConfig([
       parser: tseslint.parser,
 
       parserOptions: {
-        project: './tsconfig.json'
+        projectService: true
       },
 
       globals: baseGlobals
@@ -239,13 +310,11 @@ export default defineConfig([
     rules: {
       ...commonRules,
 
-      // disable base rule
+      // disable base JS rules
       'no-unused-vars': 'off',
-
-      // disable no-redeclare since TS allows function overloads
       'no-redeclare': 'off',
 
-      // TS-aware unused vars
+      // TS-aware rules
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -268,17 +337,13 @@ export default defineConfig([
 
     plugins: {
       react,
-      'react-hooks': reactHooks,
-      prettier: prettierPlugin
+      'react-hooks': reactHooks
     },
 
     rules: {
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
-
-      ...commonRules,
-      ...unusedRules,
 
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off'
