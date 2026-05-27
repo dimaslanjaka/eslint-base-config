@@ -41,6 +41,7 @@ describe('eslint base config integration', () => {
 
     expect(result.status).not.toBe(2); // 2 = fatal error
 
+    // Verify that the file has been modified
     const fixed = fs.readFileSync(uglyJsPath, 'utf8');
     expect(fixed).not.toBe(original);
 
