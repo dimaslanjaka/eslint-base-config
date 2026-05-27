@@ -20,6 +20,18 @@ if (!fs.existsSync(prettierrcPath)) {
   prettierrcPath = path.resolve(__dirname, '.prettierrc.json');
 }
 const prettierrc = parseJSONC(fs.readFileSync(prettierrcPath, 'utf8'));
+const isProjectESM = (() => {
+  try {
+    const pkgPath = path.resolve(cwd, 'package.json');
+    if (fs.existsSync(pkgPath)) {
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+      return pkg.type === 'module';
+    }
+  } catch {
+    // ignore
+  }
+  return false;
+})();
 
 // =========================
 // SHARED
@@ -102,29 +114,52 @@ export default defineConfig([
   },
 
   // =========================
-  // JS / JSX
+  // JS
   // =========================
   {
-    files: ['**/*.{js,mjs,jsx}'],
+    files: ['**/*.js'],
 
     languageOptions: {
       parser: babelParser,
       ecmaVersion: 'latest',
-      sourceType: 'module',
+      sourceType: isProjectESM ? 'module' : 'commonjs',
       globals: baseGlobals,
 
       parserOptions: {
         requireConfigFile: false,
 
-        ecmaFeatures: {
-          jsx: true
-        },
-
         babelOptions: {
-          presets: ['@babel/preset-react'],
-          plugins: ['@babel/plugin-syntax-import-assertions']
+          presets: ['@babel/preset-env'],
+          plugins: [isProjectESM && '@babel/plugin-syntax-import-assertions'].filter(Boolean)
         }
       }
+    },
+
+    rules: {
+      ...commonRules,
+      ...unusedRules,
+
+      // disallow require in ESM
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'CallExpression[callee.name="require"]',
+          message: 'require() is not allowed in ESM. Use import instead.'
+        }
+      ]
+    }
+  },
+
+  // =========================
+  // MJS
+  // =========================
+  {
+    files: ['**/*.mjs'],
+
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: baseGlobals
     },
 
     rules: {
