@@ -14,8 +14,12 @@ import { defineConfig } from 'eslint/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const prettierrc = parseJSONC(fs.readFileSync(path.resolve(__dirname, '.prettierrc.json'), 'utf8'));
+const cwd = process.env.INIT_CWD || process.cwd();
+let prettierrcPath = path.resolve(cwd, '.prettierrc.json');
+if (!fs.existsSync(prettierrcPath)) {
+  prettierrcPath = path.resolve(__dirname, '.prettierrc.json');
+}
+const prettierrc = parseJSONC(fs.readFileSync(prettierrcPath, 'utf8'));
 
 // =========================
 // SHARED
