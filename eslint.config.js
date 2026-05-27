@@ -27,7 +27,10 @@ const baseGlobals = {
 };
 
 const commonRules = {
-  'prettier/prettier': ['error', prettierrc],
+  'prettier/prettier': ['error', prettierrc]
+};
+
+const unusedRules = {
   'no-unused-vars': [
     'error',
     {
@@ -46,6 +49,9 @@ export default defineConfig([
   js.configs.recommended,
   prettierConfig,
 
+  // =========================
+  // GLOBAL
+  // =========================
   {
     ignores: [
       '**/*.md',
@@ -68,9 +74,11 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
+
       globals: {
         ...baseGlobals,
         ...globals.jest,
+
         grecaptcha: 'readonly',
         $: 'readonly',
         jQuery: 'readonly',
@@ -83,7 +91,10 @@ export default defineConfig([
       prettier: prettierPlugin
     },
 
-    rules: commonRules
+    rules: {
+      ...commonRules,
+      ...unusedRules
+    }
   },
 
   // =========================
@@ -97,9 +108,14 @@ export default defineConfig([
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: baseGlobals,
+
       parserOptions: {
         requireConfigFile: false,
-        ecmaFeatures: { jsx: true },
+
+        ecmaFeatures: {
+          jsx: true
+        },
+
         babelOptions: {
           presets: ['@babel/preset-react'],
           plugins: ['@babel/plugin-syntax-import-assertions']
@@ -109,16 +125,16 @@ export default defineConfig([
 
     rules: {
       ...commonRules,
+      ...unusedRules,
 
+      // disallow require in ESM
       'no-restricted-syntax': [
         'error',
         {
           selector: 'CallExpression[callee.name="require"]',
           message: 'require() is not allowed in ESM. Use import instead.'
         }
-      ],
-
-      '@typescript-eslint/no-unused-vars': 'off'
+      ]
     }
   },
 
@@ -131,9 +147,12 @@ export default defineConfig([
     languageOptions: {
       sourceType: 'commonjs',
       parser: babelParser,
+
       globals: globals.node,
+
       parserOptions: {
         requireConfigFile: false,
+
         babelOptions: {
           presets: ['@babel/preset-env']
         }
@@ -141,7 +160,12 @@ export default defineConfig([
     },
 
     rules: {
+      ...commonRules,
+      ...unusedRules,
+
       'no-var-requires': 'off',
+
+      // disallow ESM import in CJS
       'no-restricted-syntax': [
         'error',
         {
@@ -153,31 +177,47 @@ export default defineConfig([
   },
 
   // =========================
-  // TYPESCRIPT RULES EXTENSION
+  // TYPESCRIPT
   // =========================
   {
     files: ['**/*.{ts,tsx,mts,cts}'],
-    // extends: [tseslint.configs.recommended],
+
     languageOptions: {
       parser: tseslint.parser,
+
+      parserOptions: {
+        project: './tsconfig.json'
+      },
+
       globals: baseGlobals
     },
+
     plugins: {
-      '@typescript-eslint': tseslint,
+      '@typescript-eslint': tseslint.plugin,
       prettier: prettierPlugin
     },
+
     rules: {
-      'no-unused-vars': 'off',
       ...commonRules,
+
+      // disable base rule
+      'no-unused-vars': 'off',
+
+      // disable no-redeclare since TS allows function overloads
+      'no-redeclare': 'off',
+
+      // TS-aware unused vars
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_'
+        }
+      ],
+
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      // '@typescript-eslint/no-this-alias': [
-      //   'error',
-      //   {
-      //     allowedNames: ['self', 'hexo']
-      //   }
-      // ]
-      '@typescript-eslint/no-this-alias': 'off'
+      '@typescript-eslint/explicit-function-return-type': 'off'
     }
   },
 
@@ -197,7 +237,10 @@ export default defineConfig([
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
+
       ...commonRules,
+      ...unusedRules,
+
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off'
     },
