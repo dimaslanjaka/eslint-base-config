@@ -252,33 +252,17 @@ jobs:
             fi
           fi
 
-      - name: '⚙️ Define helper (run if present)'
-        shell: bash
-        run: |
-          run_if_present () {
-            script="$1"
-
-            if node -e "process.exit(require('./package.json').scripts?.['$script'] ? 0 : 1)"; then
-              corepack yarn run "$script"
-              status=$?
-              if [ $status -ne 0 ]; then
-                echo "[warn] script '$script' failed with exit code $status"
-                exit $status
-              fi
-            else
-              echo "[skip] script '$script' not found"
-            fi
-          }
-
-          echo "run_if_present defined"
-
       - name: '🧹 Clean project'
         shell: bash
         run: |
           if [ -f "package-lock.json" ]; then
             npm run clean --if-present
           else
-            run_if_present clean
+            if jq -e '.scripts.clean' package.json > /dev/null; then
+              corepack yarn run clean
+            else
+              echo "[skip] clean not found"
+            fi
           fi
 
       - name: '🔨 Build project'
@@ -287,7 +271,11 @@ jobs:
           if [ -f "package-lock.json" ]; then
             npm run build
           else
-            run_if_present build
+            if jq -e '.scripts.build' package.json > /dev/null; then
+              corepack yarn run build
+            else
+              echo "[skip] build not found"
+            fi
           fi
 
       - name: '📦 Pack project'
@@ -296,7 +284,11 @@ jobs:
           if [ -f "package-lock.json" ]; then
             npm run pack --if-present
           else
-            run_if_present pack
+            if jq -e '.scripts.pack' package.json > /dev/null; then
+              corepack yarn run pack --if-present
+            else
+              echo "[skip] pack not found"
+            fi
           fi
 
       - name: '🗑️ Remove packageManager from package.json'
