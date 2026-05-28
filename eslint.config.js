@@ -313,6 +313,7 @@ export default defineConfig([
       // disable base JS rules
       'no-unused-vars': 'off',
       'no-redeclare': 'off',
+      'no-undef': 'off',
 
       // TS-aware rules
       '@typescript-eslint/no-unused-vars': [
