@@ -9,7 +9,8 @@
     "PATH": "${env:LOCALAPPDATA}\\nvm;C:\\nvm4w\\nodejs;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\usr\\bin;${env:PATH};${workspaceFolder}\\node_modules\\.bin;${workspaceFolder}\\bin;${workspaceFolder}\\vendor\\bin;C:\\laragon\\bin\\mysql\\mysql-8.4.3-winx64\\bin;${env:LOCALAPPDATA}\\Programs\\Ollama",
     "PUPPETEER_SKIP_DOWNLOAD": "true",
     "PHP_CS_FIXER_IGNORE_ENV": "1",
-    "ESLINT_USE_FLAT_CONFIG": "true"
+    "ESLINT_USE_FLAT_CONFIG": "true",
+    "WORKSPACE_FOLDER": "${workspaceFolder}"
   },
   "terminal.integrated.profiles.windows": {
     "PowerShell": {
@@ -39,7 +40,7 @@
       "args": [
         "-NoExit",
         "-Command",
-        "$configPath = @('${workspaceFolder}/oh-my-posh.config.json', '${workspaceFolder}/node_modules/@dimaslanjaka/eslint-base-config/oh-my-posh.config.json') | Where-Object { Test-Path $_ } | Select-Object -First 1; if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') { Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force }; $OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::new(); if ($configPath) { oh-my-posh init pwsh --config \"$configPath\" | Invoke-Expression }; Set-PSReadLineOption -PredictionSource History; Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock { param($wordToComplete,$commandAst,$cursorPosition) winget complete --word=\"$wordToComplete\" --commandline \"$($commandAst.ToString())\" --position $cursorPosition | ForEach-Object { [System.Management.Automation.CompletionResult]::new($_,$_,'ParameterValue',$_) } }; if (-not $configPath) { oh-my-posh init pwsh | Invoke-Expression }"
+        "$candidates = @('${workspaceFolder}/scripts/OhMyPoshInit.ps1','${workspaceFolder}/node_modules/@dimaslanjaka/eslint-base-config/scripts/OhMyPoshInit.ps1'); $init = $candidates | Where-Object { Test-Path $_ } | Select-Object -First 1; if ($init) { if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') { Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force }; & $init }"
       ],
       "icon": "terminal-powershell"
     },

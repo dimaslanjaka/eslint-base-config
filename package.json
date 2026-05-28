@@ -16,7 +16,8 @@
     "./dist",
     "./postinstall.cjs",
     "./.vscode/settings.json",
-    "./oh-my-posh.config.*"
+    "./oh-my-posh.config.*",
+    "./scripts/**/*"
   ],
   "exports": {
     ".": {
