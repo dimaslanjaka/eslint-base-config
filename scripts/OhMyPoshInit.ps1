@@ -24,7 +24,12 @@ $OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 # PSReadLine prediction
 $setPsReadLineCmd = Get-Command Set-PSReadLineOption -ErrorAction SilentlyContinue
 if ($setPsReadLineCmd -and $setPsReadLineCmd.Parameters.ContainsKey('PredictionSource')) {
+  # Tab/Shift+Tab cycle completions using supported PSReadLine functions.
+  # PredictionViewStyle set to ListView for clearer candidate navigation
   Set-PSReadLineOption -PredictionSource History
+  Set-PSReadLineOption -PredictionViewStyle ListView
+  Set-PSReadLineKeyHandler -Key Tab -Function TabCompleteNext
+  Set-PSReadLineKeyHandler -Key Shift+Tab -Function TabCompletePrevious
   # Write-Output "PSReadLine prediction enabled (using History)."
 }
 else {
@@ -62,6 +67,49 @@ if ($orderedBinPaths.Count -gt 0) {
   }
 
   $env:Path = (@($orderedBinPaths) + @($remainingPath)) -join ';'
+
+  # Register aliases from prioritized bins so command completion favors local tools
+  # over similarly-prefixed executables from global installations.
+  $managedAliasDescription = 'workspace-bin-priority'
+  $seenAliases = @{}
+  foreach ($binPath in $orderedBinPaths) {
+    $entries = Get-ChildItem -Path $binPath -File -ErrorAction SilentlyContinue
+    foreach ($entry in $entries) {
+      $name = [System.IO.Path]::GetFileNameWithoutExtension($entry.Name)
+      if ([string]::IsNullOrWhiteSpace($name)) {
+        continue
+      }
+
+      $aliasKey = $name.ToLowerInvariant()
+      if ($seenAliases.ContainsKey($aliasKey)) {
+        continue
+      }
+
+      # Prefer first match by bin priority and avoid replacing existing non-alias commands.
+      $existingCmd = Get-Command -Name $name -ErrorAction SilentlyContinue
+      if ($existingCmd -and $existingCmd.CommandType -ne 'Alias') {
+        continue
+      }
+
+      if ($existingCmd -and $existingCmd.CommandType -eq 'Alias') {
+        $existingAlias = Get-Alias -Name $name -ErrorAction SilentlyContinue
+        if ($existingAlias) {
+          $isProtectedAlias =
+            (($existingAlias.Options -band [System.Management.Automation.ScopedItemOptions]::Constant) -ne 0) -or
+            (($existingAlias.Options -band [System.Management.Automation.ScopedItemOptions]::ReadOnly) -ne 0) -or
+            (($existingAlias.Options -band [System.Management.Automation.ScopedItemOptions]::AllScope) -ne 0)
+
+          $isManagedAlias = $existingAlias.Description -eq $managedAliasDescription
+          if ($isProtectedAlias -and -not $isManagedAlias) {
+            continue
+          }
+        }
+      }
+
+      Set-Alias -Name $name -Value $entry.FullName -Scope Global -Force -Description $managedAliasDescription
+      $seenAliases[$aliasKey] = $true
+    }
+  }
 }
 
 # Winget native completion
