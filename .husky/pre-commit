@@ -9,9 +9,6 @@ npx -y lint-staged
 
 node scripts/checksum.mjs
 
-eslint --fix src/_auto_gen/checksum.cjs
-git add src/_auto_gen/checksum.cjs
-
 # ---- git merge driver setup (idempotent) ----
 if ! git config --get merge.resolve_hash.driver >/dev/null; then
   git config merge.resolve_hash.name "Resolve generated checksum"

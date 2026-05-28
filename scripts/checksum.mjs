@@ -78,6 +78,7 @@ module.exports.default = module.exports;
   );
 
   cp.spawnSync('npx', ['-y', 'eslint', '--fix', OUTPUT_FILE], { stdio: 'inherit' });
+  cp.spawnAsync('git', ['add', OUTPUT_FILE], { stdio: 'inherit' });
 
   console.log('[checksum] written:', OUTPUT_FILE);
   console.log('[checksum] hash:', finalHash);
