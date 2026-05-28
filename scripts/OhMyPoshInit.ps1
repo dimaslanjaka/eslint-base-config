@@ -12,6 +12,11 @@ else {
   Split-Path -Parent $PSScriptRoot
 }
 
+# Ensure WORKSPACE_FOLDER is available to this session.
+if (-not $env:WORKSPACE_FOLDER) {
+  $env:WORKSPACE_FOLDER = $workspaceRoot
+}
+
 # Execution policy (only if needed)
 if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') {
   Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -Force
@@ -20,6 +25,52 @@ if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') {
 
 # Encoding fix
 $OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
+$env:LANG = 'en_US.UTF-8'
+
+# Register a custom PATH order similar to the batch launcher script.
+$customPathEntries = @(
+  (Join-Path $env:LOCALAPPDATA 'nvm'),
+  'C:\nvm4w\nodejs',
+  'C:\Program Files\Nox\bin',
+  'D:\Program Files\Nox\bin',
+  'C:\Program Files\Git\cmd',
+  'C:\Program Files\Git\usr\bin',
+  (Join-Path $workspaceRoot 'node_modules/.bin'),
+  (Join-Path $workspaceRoot 'bin'),
+  (Join-Path $workspaceRoot 'vendor/bin'),
+  'C:\laragon\bin\mysql\mysql-8.4.3-winx64\bin',
+  'C:\laragon\bin\php\php-8.4.11-Win32-vs17-x64',
+  'C:\laragon\bin\git\bin',
+  'C:\laragon\bin\python\python-3.13',
+  'C:\laragon\bin\memcached\memcached-1.6.8-win64-mingw',
+  'D:\Program Files\Microsoft VS Code',
+  'C:\Users\Dell\AppData\Local\Programs\Ollama'
+)
+
+$existingPathEntries = @($env:Path -split ';' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+$normalizedSeen = @{}
+$mergedPath = @()
+
+foreach ($candidate in (@($customPathEntries) + @($existingPathEntries))) {
+  if ([string]::IsNullOrWhiteSpace($candidate)) {
+    continue
+  }
+
+  $trimmedCandidate = $candidate.Trim().TrimEnd('\', '/')
+  if ([string]::IsNullOrWhiteSpace($trimmedCandidate)) {
+    continue
+  }
+
+  $normalizedKey = $trimmedCandidate.ToLowerInvariant()
+  if ($normalizedSeen.ContainsKey($normalizedKey)) {
+    continue
+  }
+
+  $normalizedSeen[$normalizedKey] = $true
+  $mergedPath += $trimmedCandidate
+}
+
+$env:Path = $mergedPath -join ';'
 
 # PSReadLine prediction
 $setPsReadLineCmd = Get-Command Set-PSReadLineOption -ErrorAction SilentlyContinue
@@ -57,16 +108,38 @@ if ($orderedBinPaths.Count -gt 0) {
   $normalizedPriorityMap = @{}
 
   foreach ($p in $orderedBinPaths) {
-    $normalizedPriorityMap[$p.TrimEnd('\\')] = $true
+    $normalizedPriorityMap[$p.TrimEnd('\')] = $true
   }
 
   $remainingPath = foreach ($existing in $pathParts) {
-    if (-not $normalizedPriorityMap.ContainsKey($existing.TrimEnd('\\'))) {
+    if (-not $normalizedPriorityMap.ContainsKey($existing.TrimEnd('\'))) {
       $existing
     }
   }
 
-  $env:Path = (@($orderedBinPaths) + @($remainingPath)) -join ';'
+  $dedupedOrderedPath = @()
+  $seenOrderedPath = @{}
+
+  foreach ($candidate in (@($orderedBinPaths) + @($remainingPath))) {
+    if ([string]::IsNullOrWhiteSpace($candidate)) {
+      continue
+    }
+
+    $trimmedCandidate = $candidate.Trim().TrimEnd('\', '/')
+    if ([string]::IsNullOrWhiteSpace($trimmedCandidate)) {
+      continue
+    }
+
+    $normalizedCandidate = $trimmedCandidate.ToLowerInvariant()
+    if ($seenOrderedPath.ContainsKey($normalizedCandidate)) {
+      continue
+    }
+
+    $seenOrderedPath[$normalizedCandidate] = $true
+    $dedupedOrderedPath += $trimmedCandidate
+  }
+
+  $env:Path = $dedupedOrderedPath -join ';'
 
   # Register aliases from prioritized bins so command completion favors local tools
   # over similarly-prefixed executables from global installations.
@@ -112,6 +185,14 @@ if ($orderedBinPaths.Count -gt 0) {
   }
 }
 
+# Debug: print final PATH order in this session.
+# Write-Output 'Final PATH entries:'
+# $pathIndex = 1
+# foreach ($pathEntry in ($env:Path -split ';' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })) {
+#   Write-Output ("[{0:D2}] {1}" -f $pathIndex, $pathEntry)
+#   $pathIndex++
+# }
+
 # Winget native completion
 # Write-Output "Setting up winget native completion..."
 Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
@@ -128,12 +209,18 @@ Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
   }
 }
 
-# Oh My Posh init
-if ($configPath) {
-  # Write-Output "Initializing Oh My Posh with config: $configPath"
-  oh-my-posh init pwsh --config $configPath | Invoke-Expression
+# Oh My Posh init (if installed)
+$ohMyPoshCommand = Get-Command oh-my-posh -ErrorAction SilentlyContinue
+if ($ohMyPoshCommand) {
+  if ($configPath) {
+    # Write-Output "Initializing Oh My Posh with config: $configPath"
+    oh-my-posh init pwsh --config $configPath | Invoke-Expression
+  }
+  else {
+    # Write-Output "No Oh My Posh config found, initializing with default settings."
+    oh-my-posh init pwsh | Invoke-Expression
+  }
 }
 else {
-  # Write-Output "No Oh My Posh config found, initializing with default settings."
-  oh-my-posh init pwsh | Invoke-Expression
+  Write-Output "Skipping Oh My Posh initialization (oh-my-posh not found in PATH)."
 }
