@@ -1,55 +1,78 @@
 #!/usr/bin/env bash
-
-set -e
+set -euo pipefail
 
 npx -y lint-staged
 
 OUTPUT_FILE="src/_auto_gen/checksum.cjs"
-TEMP_FILE="tmp/checksums.txt"
 
-# Clear temp file
-> "$TEMP_FILE"
+tmp_dir="$(mktemp -d)"
+TEMP_FILE="$tmp_dir/checksums.txt"
 
-# Hash files only inside release/ or releases/
+trap 'rm -rf "$tmp_dir"' EXIT
+
+# ---- hash release folders (fast path) ----
 for dir in release releases; do
-  if [ -d "$dir" ]; then
-    find "$dir" -type f | sort | while read -r file; do
-      sha256sum "$file" >> "$TEMP_FILE"
-    done
+  if [[ -d "$dir" ]]; then
+    find "$dir" -type f -exec sha256sum {} + >> "$TEMP_FILE"
   fi
 done
 
-# Skip when no files found
-if [ ! -s "$TEMP_FILE" ]; then
-  echo "No release folders found"
-  rm -f "$TEMP_FILE"
+# ---- read package.json files array once ----
+if command -v node >/dev/null 2>&1; then
+  mapfile -t files < <(
+    node -e "
+      try {
+        const p = JSON.parse(require('fs').readFileSync('package.json','utf8'));
+        (p.files || []).forEach(f => console.log(f));
+      } catch {}
+    "
+  )
+else
+  files=()
+fi
+
+# ---- hash package.json declared files ----
+shopt -s nullglob globstar
+
+for pattern in "${files[@]}"; do
+  # expand glob safely
+  for match in $pattern; do
+    if [[ -f "$match" ]]; then
+      sha256sum "$match" >> "$TEMP_FILE"
+    elif [[ -d "$match" ]]; then
+      find "$match" -type f -exec sha256sum {} + >> "$TEMP_FILE"
+    fi
+  done
+done
+
+shopt -u nullglob globstar
+
+# ---- empty check ----
+if [[ ! -s "$TEMP_FILE" ]]; then
+  echo "No files found for checksum"
   exit 0
 fi
 
-# Generate combined hash
-FINAL_HASH=$(sha256sum "$TEMP_FILE" | awk '{print $1}')
+# ---- final hash (streamed, no awk needed) ----
+FINAL_HASH=$(sha256sum "$TEMP_FILE" | cut -d' ' -f1)
 
-# Generate CommonJS export
 mkdir -p "$(dirname "$OUTPUT_FILE")"
+
 cat > "$OUTPUT_FILE" <<EOF
 const hash = "$FINAL_HASH";
 
 module.exports = hash;
-module.exports = {
-  hash,
-};
+module.exports = { hash };
+module.exports.default = module.exports;
 EOF
 
-rm -f "$TEMP_FILE"
-
+# lint + stage
 eslint --fix "$OUTPUT_FILE"
-
 git add "$OUTPUT_FILE"
 
-# Register the merge driver for the checksum file
+# ---- git merge driver setup (idempotent) ----
 if ! git config --get merge.resolve_hash.driver >/dev/null; then
   git config merge.resolve_hash.name "Resolve generated checksum"
   git config merge.resolve_hash.driver true
-
   echo "[OK] registered resolve_hash merge driver"
 fi
