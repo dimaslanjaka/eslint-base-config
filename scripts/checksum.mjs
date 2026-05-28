@@ -8,6 +8,12 @@ import pkg from '../package.json' with { type: 'json' };
 
 const OUTPUT_FILE = 'src/_auto_gen/checksum.cjs';
 
+function isGitHook() {
+  const env = process.env;
+
+  return Boolean(env.GIT_DIR || env.GIT_INDEX_FILE || env.GIT_PREFIX || env.HUSKY === '1');
+}
+
 function sha256(filePath) {
   const hash = crypto.createHash('sha256');
 
@@ -89,7 +95,10 @@ module.exports.default = module.exports;
   );
 
   cp.spawnSync('npx', ['-y', 'eslint', '--fix', OUTPUT_FILE], { stdio: 'inherit' });
-  cp.spawnAsync('git', ['add', OUTPUT_FILE], { stdio: 'inherit' });
+
+  if (isGitHook()) {
+    cp.spawnSync('git', ['add', OUTPUT_FILE], { stdio: 'inherit' });
+  }
 
   console.log('[checksum] written:', OUTPUT_FILE);
   console.log('[checksum] hash:', finalHash);
