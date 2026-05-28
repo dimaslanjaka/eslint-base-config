@@ -6,7 +6,7 @@
     "ESLINT_USE_FLAT_CONFIG": "true"
   },
   "terminal.integrated.env.windows": {
-    "PATH": "${env:LOCALAPPDATA}\\nvm;C:\\nvm4w\\nodejs;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\usr\\bin;${env:PATH};${workspaceFolder}\\node_modules\\.bin;${workspaceFolder}\\bin;${workspaceFolder}\\vendor\\bin;C:\\laragon\\bin\\mysql\\mysql-8.4.3-winx64\\bin;C:\\Users\\Dell\\AppData\\Local\\Programs\\Ollama",
+    "PATH": "${env:LOCALAPPDATA}\\nvm;C:\\nvm4w\\nodejs;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\usr\\bin;${env:PATH};${workspaceFolder}\\node_modules\\.bin;${workspaceFolder}\\bin;${workspaceFolder}\\vendor\\bin;C:\\laragon\\bin\\mysql\\mysql-8.4.3-winx64\\bin;${env:LOCALAPPDATA}\\Programs\\Ollama",
     "PUPPETEER_SKIP_DOWNLOAD": "true",
     "PHP_CS_FIXER_IGNORE_ENV": "1",
     "ESLINT_USE_FLAT_CONFIG": "true"
@@ -19,6 +19,28 @@
     "Short PowerShell": {
       "source": "PowerShell",
       "args": ["-NoExit", "-Command", "function prompt { \"[$((Get-Item .).Name)]> \" }"],
+      "icon": "terminal-powershell"
+    },
+    "PowerShell 7": {
+      "path": "${env:LOCALAPPDATA}\\Microsoft\\WindowsApps\\pwsh.exe",
+      "icon": "terminal-powershell"
+    },
+    "Short PowerShell 7": {
+      "path": "${env:LOCALAPPDATA}\\Microsoft\\WindowsApps\\pwsh.exe",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "function prompt { Write-Host '[' -NoNewline -ForegroundColor DarkGray; Write-Host (Split-Path -Leaf (Get-Location)) -NoNewline -ForegroundColor Cyan; Write-Host ']> ' -NoNewline -ForegroundColor DarkGray; return ' ' }"
+      ],
+      "icon": "terminal-powershell"
+    },
+    "Oh My Posh": {
+      "path": "${env:LOCALAPPDATA}\\Microsoft\\WindowsApps\\pwsh.exe",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "oh-my-posh init pwsh --config \"${workspaceFolder}/oh-my-posh.config.json\" | Invoke-Expression"
+      ],
       "icon": "terminal-powershell"
     },
     "Command Prompt": {
@@ -42,7 +64,8 @@
       }
     }
   },
-  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "terminal.integrated.fontFamily": "MesloLGM Nerd Font",
+  "terminal.integrated.defaultProfile.windows": "Oh My Posh",
   "eslint.debug": true,
   "eslint.enable": true,
   "eslint.format.enable": false,

@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+final_space: true
+version: 4
+
+blocks:
+  - type: prompt
+    alignment: left
+    segments:
+      - type: path
+        style: plain
+        foreground: '#61AFEF'
+        background: '#1E1E2E'
+        template: '📂 {{ base .Path }} $'

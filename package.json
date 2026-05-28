@@ -15,7 +15,8 @@
     "./.prettierrc.json",
     "./dist",
     "./postinstall.cjs",
-    "./.vscode/settings.json"
+    "./.vscode/settings.json",
+    "./oh-my-posh.config.*"
   ],
   "exports": {
     ".": {
