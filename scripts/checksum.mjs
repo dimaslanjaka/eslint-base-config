@@ -4,6 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { globSync } from 'glob';
 import * as cp from 'cross-spawn';
+import pkg from '../package.json' with { type: 'json' };
 
 const OUTPUT_FILE = 'src/_auto_gen/checksum.cjs';
 
@@ -39,7 +40,6 @@ function collectFiles() {
 
   // ---- package.json "files" field ----
   try {
-    const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     if (Array.isArray(pkg.files)) {
       for (const pattern of pkg.files) {
         for (const match of globSync(pattern, { nodir: false })) {
