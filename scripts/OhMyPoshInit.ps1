@@ -4,6 +4,14 @@ $configPath = @(
   "$env:WORKSPACE_FOLDER\node_modules\@dimaslanjaka\eslint-base-config\oh-my-posh.config.json"
 ) | Where-Object { Test-Path $_ } | Select-Object -First 1
 
+# Resolve workspace root (fallback to script parent if WORKSPACE_FOLDER is unset)
+$workspaceRoot = if ($env:WORKSPACE_FOLDER -and (Test-Path $env:WORKSPACE_FOLDER)) {
+  $env:WORKSPACE_FOLDER
+}
+else {
+  Split-Path -Parent $PSScriptRoot
+}
+
 # Execution policy (only if needed)
 if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') {
   Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -Force
@@ -21,6 +29,39 @@ if ($setPsReadLineCmd -and $setPsReadLineCmd.Parameters.ContainsKey('PredictionS
 }
 else {
   Write-Output "Skipping PSReadLine prediction (unsupported PSReadLine version)."
+}
+
+# Local command completion priority is driven by PATH order.
+# Ordered priorities:
+# 1) bin/
+# 2) node_modules/.bin
+# 3) vendor/bin
+# 4) venv/.venv bin folder
+$orderedBinPaths = @(
+  (Join-Path $workspaceRoot 'bin'),
+  (Join-Path $workspaceRoot 'node_modules/.bin'),
+  (Join-Path $workspaceRoot 'vendor/bin'),
+  (Join-Path $workspaceRoot 'venv/Scripts'),
+  (Join-Path $workspaceRoot 'venv/bin'),
+  (Join-Path $workspaceRoot '.venv/Scripts'),
+  (Join-Path $workspaceRoot '.venv/bin')
+) | Where-Object { Test-Path $_ }
+
+if ($orderedBinPaths.Count -gt 0) {
+  $pathParts = @($env:Path -split ';' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+  $normalizedPriorityMap = @{}
+
+  foreach ($p in $orderedBinPaths) {
+    $normalizedPriorityMap[$p.TrimEnd('\\')] = $true
+  }
+
+  $remainingPath = foreach ($existing in $pathParts) {
+    if (-not $normalizedPriorityMap.ContainsKey($existing.TrimEnd('\\'))) {
+      $existing
+    }
+  }
+
+  $env:Path = (@($orderedBinPaths) + @($remainingPath)) -join ';'
 }
 
 # Winget native completion
