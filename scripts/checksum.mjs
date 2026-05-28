@@ -9,8 +9,19 @@ const OUTPUT_FILE = 'src/_auto_gen/checksum.cjs';
 
 function sha256(filePath) {
   const hash = crypto.createHash('sha256');
-  const data = fs.readFileSync(filePath);
-  hash.update(data);
+
+  const fd = fs.openSync(filePath, 'r');
+  try {
+    const buffer = Buffer.allocUnsafe(1024 * 1024);
+    let bytesRead = 0;
+
+    while ((bytesRead = fs.readSync(fd, buffer, 0, buffer.length, null)) > 0) {
+      hash.update(buffer.subarray(0, bytesRead));
+    }
+  } finally {
+    fs.closeSync(fd);
+  }
+
   return hash.digest('hex');
 }
 
