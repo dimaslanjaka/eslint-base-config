@@ -39,7 +39,7 @@
       "args": [
         "-NoExit",
         "-Command",
-        "$configPath = @('${workspaceFolder}/oh-my-posh.config.json', '${workspaceFolder}/node_modules/@dimaslanjaka/eslint-base-config/oh-my-posh.config.json') | Where-Object { Test-Path $_ } | Select-Object -First 1; if ($configPath) { oh-my-posh init pwsh --config \"$configPath\" | Invoke-Expression } else { oh-my-posh init pwsh | Invoke-Expression }"
+        "$configPath = @('${workspaceFolder}/oh-my-posh.config.json', '${workspaceFolder}/node_modules/@dimaslanjaka/eslint-base-config/oh-my-posh.config.json') | Where-Object { Test-Path $_ } | Select-Object -First 1; if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') { Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force }; if ($configPath) { oh-my-posh init pwsh --config \"$configPath\" | Invoke-Expression }; Set-PSReadLineOption -PredictionSource History; if (-not $configPath) { oh-my-posh init pwsh | Invoke-Expression }"
       ],
       "icon": "terminal-powershell"
     },
