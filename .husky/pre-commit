@@ -3,76 +3,14 @@ if [ -z "${BASH_VERSION:-}" ]; then
   exec /usr/bin/env bash "$0" "$@"
 fi
 
-set -euo pipefail
+set -e
 
 npx -y lint-staged
 
-OUTPUT_FILE="src/_auto_gen/checksum.cjs"
+node scripts/checksum.mjs
 
-tmp_dir="$(mktemp -d)"
-TEMP_FILE="$tmp_dir/checksums.txt"
-
-trap 'rm -rf "$tmp_dir"' EXIT
-
-# ---- hash release folders (fast path) ----
-for dir in release releases; do
-  if [[ -d "$dir" ]]; then
-    find "$dir" -type f -exec sha256sum {} + >> "$TEMP_FILE"
-  fi
-done
-
-# ---- read package.json files array once ----
-if command -v node >/dev/null 2>&1; then
-  mapfile -t files < <(
-    node -e "
-      try {
-        const p = JSON.parse(require('fs').readFileSync('package.json','utf8'));
-        (p.files || []).forEach(f => console.log(f));
-      } catch {}
-    "
-  )
-else
-  files=()
-fi
-
-# ---- hash package.json declared files ----
-shopt -s nullglob globstar
-
-for pattern in "${files[@]}"; do
-  # expand glob safely
-  for match in $pattern; do
-    if [[ -f "$match" ]]; then
-      sha256sum "$match" >> "$TEMP_FILE"
-    elif [[ -d "$match" ]]; then
-      find "$match" -type f -exec sha256sum {} + >> "$TEMP_FILE"
-    fi
-  done
-done
-
-shopt -u nullglob globstar
-
-# ---- empty check ----
-if [[ ! -s "$TEMP_FILE" ]]; then
-  echo "No files found for checksum"
-  exit 0
-fi
-
-# ---- final hash (streamed, no awk needed) ----
-FINAL_HASH=$(sha256sum "$TEMP_FILE" | cut -d' ' -f1)
-
-mkdir -p "$(dirname "$OUTPUT_FILE")"
-
-cat > "$OUTPUT_FILE" <<EOF
-const hash = "$FINAL_HASH";
-
-module.exports = hash;
-module.exports = { hash };
-module.exports.default = module.exports;
-EOF
-
-# lint + stage
-eslint --fix "$OUTPUT_FILE"
-git add "$OUTPUT_FILE"
+eslint --fix src/_auto_gen/checksum.cjs
+git add src/_auto_gen/checksum.cjs
 
 # ---- git merge driver setup (idempotent) ----
 if ! git config --get merge.resolve_hash.driver >/dev/null; then
