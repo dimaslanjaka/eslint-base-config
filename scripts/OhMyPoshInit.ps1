@@ -1,9 +1,3 @@
-# Resolve oh-my-posh config
-$configPath = @(
-  "$env:WORKSPACE_FOLDER\oh-my-posh.config.json",
-  "$env:WORKSPACE_FOLDER\node_modules\@dimaslanjaka\eslint-base-config\oh-my-posh.config.json"
-) | Where-Object { Test-Path $_ } | Select-Object -First 1
-
 # Resolve workspace root (fallback to script parent if WORKSPACE_FOLDER is unset)
 $workspaceRoot = if ($env:WORKSPACE_FOLDER -and (Test-Path $env:WORKSPACE_FOLDER)) {
   $env:WORKSPACE_FOLDER
@@ -11,6 +5,12 @@ $workspaceRoot = if ($env:WORKSPACE_FOLDER -and (Test-Path $env:WORKSPACE_FOLDER
 else {
   Split-Path -Parent $PSScriptRoot
 }
+
+# Resolve oh-my-posh config using resolved workspace root
+$configPath = @(
+  (Join-Path $workspaceRoot 'oh-my-posh.config.json'),
+  (Join-Path $workspaceRoot 'node_modules/@dimaslanjaka/eslint-base-config/oh-my-posh.config.json')
+) | Where-Object { Test-Path $_ } | Select-Object -First 1
 
 # Ensure WORKSPACE_FOLDER is available to this session.
 if (-not $env:WORKSPACE_FOLDER) {
@@ -28,9 +28,15 @@ $OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:LANG = 'en_US.UTF-8'
 
 # Register a custom PATH order similar to the batch launcher script.
+$npmGlobalBinCandidates = @(
+  (Join-Path $env:APPDATA 'npm'),
+  (Join-Path $env:LOCALAPPDATA 'npm')
+) | Where-Object { Test-Path $_ }
+
 $customPathEntries = @(
   (Join-Path $env:LOCALAPPDATA 'nvm'),
   'C:\nvm4w\nodejs',
+  $npmGlobalBinCandidates,
   'C:\Program Files\Nox\bin',
   'D:\Program Files\Nox\bin',
   'C:\Program Files\Git\cmd',
