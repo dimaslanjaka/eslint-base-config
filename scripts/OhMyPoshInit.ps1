@@ -149,28 +149,20 @@ if ($orderedBinPaths.Count -gt 0) {
 
   $env:Path = $dedupedOrderedPath -join ';'
 
-  # Register aliases from prioritized bins so command completion favors local tools
-  # over similarly-prefixed executables from global installations.
+  # Register aliases from prioritized bins: use cache + background refresh for speed.
   $managedAliasDescription = 'workspace-bin-priority'
-  $seenAliases = @{}
-  foreach ($binPath in $orderedBinPaths) {
-    $entries = Get-ChildItem -Path $binPath -File -ErrorAction SilentlyContinue
-    foreach ($entry in $entries) {
-      $name = [System.IO.Path]::GetFileNameWithoutExtension($entry.Name)
-      if ([string]::IsNullOrWhiteSpace($name)) {
-        continue
-      }
+  $aliasCache = Join-Path $env:LOCALAPPDATA 'pwsh_workspace_aliases.json'
 
-      $aliasKey = $name.ToLowerInvariant()
-      if ($seenAliases.ContainsKey($aliasKey)) {
-        continue
-      }
+  function Set-AliasFromObject($obj) {
+    try {
+      if (-not $obj) { return }
+      $name = $obj.Name
+      $value = $obj.Value
+      if ([string]::IsNullOrWhiteSpace($name) -or [string]::IsNullOrWhiteSpace($value)) { return }
 
-      # Prefer first match by bin priority and avoid replacing existing non-alias commands.
+      # If a non-alias command exists with this name, skip
       $existingCmd = Get-Command -Name $name -ErrorAction SilentlyContinue
-      if ($existingCmd -and $existingCmd.CommandType -ne 'Alias') {
-        continue
-      }
+      if ($existingCmd -and $existingCmd.CommandType -ne 'Alias') { return }
 
       if ($existingCmd -and $existingCmd.CommandType -eq 'Alias') {
         $existingAlias = Get-Alias -Name $name -ErrorAction SilentlyContinue
@@ -182,14 +174,48 @@ if ($orderedBinPaths.Count -gt 0) {
 
           $isManagedAlias = $existingAlias.Description -eq $managedAliasDescription
           if ($isProtectedAlias -and -not $isManagedAlias) {
-            continue
+            return
           }
         }
       }
 
-      Set-Alias -Name $name -Value $entry.FullName -Scope Global -Force -Description $managedAliasDescription
-      $seenAliases[$aliasKey] = $true
+      Set-Alias -Name $name -Value $value -Scope Global -Force -Description $managedAliasDescription -ErrorAction SilentlyContinue
+    } catch {
+      # ignore failures
     }
+  }
+
+  if (Test-Path $aliasCache) {
+    try {
+      $cached = Get-Content $aliasCache -Raw | ConvertFrom-Json -ErrorAction Stop
+      foreach ($a in $cached) { Set-AliasFromObject $a }
+    } catch {
+      Remove-Item $aliasCache -ErrorAction SilentlyContinue
+    }
+    # Refresh cache in background so it's kept up-to-date without blocking startup
+    Start-Job -ScriptBlock {
+      param($bins,$cacheFile)
+      $out = @()
+      foreach ($bin in $bins) {
+        Get-ChildItem -Path $bin -File -ErrorAction SilentlyContinue | ForEach-Object {
+          $out += @{ Name = [IO.Path]::GetFileNameWithoutExtension($_.Name); Value = $_.FullName }
+        }
+      }
+      $out | ConvertTo-Json | Set-Content -Path $cacheFile -Encoding UTF8
+    } -ArgumentList ($orderedBinPaths, $aliasCache) | Out-Null
+  }
+  else {
+    # No cache yet: create it in background and avoid blocking the prompt.
+    Start-Job -ScriptBlock {
+      param($bins,$cacheFile)
+      $out = @()
+      foreach ($bin in $bins) {
+        Get-ChildItem -Path $bin -File -ErrorAction SilentlyContinue | ForEach-Object {
+          $out += @{ Name = [IO.Path]::GetFileNameWithoutExtension($_.Name); Value = $_.FullName }
+        }
+      }
+      $out | ConvertTo-Json | Set-Content -Path $cacheFile -Encoding UTF8
+    } -ArgumentList ($orderedBinPaths, $aliasCache) | Out-Null
   }
 }
 
@@ -220,15 +246,35 @@ Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
 # Oh My Posh init (if installed)
 $ohMyPoshCommand = Get-Command oh-my-posh -ErrorAction SilentlyContinue
 if ($ohMyPoshCommand) {
-  if ($configPath) {
-    # Write-Output "Initializing Oh My Posh with config: $configPath"
-    oh-my-posh init pwsh --config $configPath | Invoke-Expression
+  # Lazy initialize Oh My Posh on first prompt invocation to avoid blocking profile startup.
+  function Initialize-OhMyPosh {
+    if ($global:OhMyPoshInitialized) { return }
+    try {
+      if ($configPath) {
+        oh-my-posh init pwsh --config $configPath | Invoke-Expression
+      } else {
+        oh-my-posh init pwsh | Invoke-Expression
+      }
+      $global:OhMyPoshInitialized = $true
+    } catch {
+      Write-Verbose "Oh My Posh init failed: $_"
+    }
   }
-  else {
-    # Write-Output "No Oh My Posh config found, initializing with default settings."
-    oh-my-posh init pwsh | Invoke-Expression
+
+  # Set a lightweight wrapper prompt that initializes Oh My Posh on first render.
+  $__wrapperPromptScript = if (Get-Command prompt -CommandType Function -ErrorAction SilentlyContinue) { (Get-Command prompt -CommandType Function).ScriptBlock } else { $null }
+
+  function prompt {
+    Initialize-OhMyPosh
+    # After initialization, invoke the current prompt function (which may have been replaced by oh-my-posh).
+    $p = Get-Command prompt -CommandType Function -ErrorAction SilentlyContinue
+    if ($p -and $p.ScriptBlock -and -not ($p.ScriptBlock -eq $MyInvocation.MyCommand.ScriptBlock)) {
+      & $p.ScriptBlock
+    } else {
+      "PS $(Get-Location)> "
+    }
   }
 }
 else {
-  Write-Output "Skipping Oh My Posh initialization (oh-my-posh not found in PATH)."
+  Write-Verbose "Skipping Oh My Posh initialization (oh-my-posh not found in PATH)."
 }
