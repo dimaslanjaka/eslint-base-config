@@ -74,7 +74,15 @@ module.exports = [...base];
   return file;
 }
 
+/**
+ * Generate an ESM-style ESLint config file path.
+ * @returns {string} The path to the generated ESM config file.
+ */
 const generateEsmConfig = () => generateConfig('mjs');
+/**
+ * Generate a CommonJS-style ESLint config file path.
+ * @returns {string} The path to the generated CJS config file.
+ */
 const generateCjsConfig = () => generateConfig('cjs');
 
 /**
@@ -101,6 +109,12 @@ function runEslint(file, argsOrOptions = [], options = {}) {
   return run('npx', eslintArgs, { ...opts, throws: false });
 }
 
+/**
+ * Copy a fixture 'ugly' source file to a destination with the given extension.
+ * @param {string} [srcFilename='ugly'] - Base name of the fixture (without extension).
+ * @param {string} [destExt='js'] - Destination file extension (with or without leading dot).
+ * @returns {string} The path to the written destination file.
+ */
 function writeUglyCodes(srcFilename = 'ugly', destExt = 'js') {
   const dest = path.join(fixturesDir, `${srcFilename}.${destExt.replace(/^\./, '')}`);
   const uglySource = path.join(__dirname, 'fixtures', `${srcFilename}.txt`);
@@ -173,6 +187,11 @@ async function setup(cache = true, debug = false) {
   return true;
 }
 
+/**
+ * Build the package and create a packed tarball in the project root.
+ * Throws if any build or pack command fails.
+ * @returns {void}
+ */
 function buildPackage() {
   run('yarn', ['run', 'build'], {
     cwd: PROJECT_ROOT,
