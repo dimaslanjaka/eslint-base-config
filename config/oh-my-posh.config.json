@@ -9,7 +9,7 @@
           "foreground": "#193549",
           "leading_diamond": "\ue0b6",
           "style": "diamond",
-          "template": " {{ if .SSHSession }}\ueba9 {{ end }}{{ .UserName }}@{{ .HostName }} ",
+          "template": " {{ .UserName }} ",
           "trailing_diamond": "\ue0b0",
           "type": "session"
         },
@@ -22,7 +22,7 @@
             "style": "folder"
           },
           "style": "diamond",
-          "template": " \ueaf7  {{ .Path }} ",
+          "template": " \ueaf7 {{ .Path }} ",
           "type": "path"
         }
       ],
@@ -33,9 +33,9 @@
       "newline": true,
       "segments": [
         {
-          "foreground": "#193549",
+          "foreground": "#7dbeec",
           "style": "plain",
-          "template": ">",
+          "template": "\ue285",
           "type": "text"
         }
       ],
