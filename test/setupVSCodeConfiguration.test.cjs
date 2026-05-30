@@ -39,7 +39,7 @@ describe('setupVSCodeConfiguration', () => {
 
     expect(settings['editor.codeActionsOnSave']).toBeDefined();
 
-    expect(settings['terminal.integrated.defaultProfile.windows']).toBe('Command Prompt');
+    expect(settings['terminal.integrated.defaultProfile.windows']).toBe('Oh My Posh');
   });
 
   test('should merge existing settings with package settings', async () => {
@@ -160,6 +160,38 @@ describe('setupVSCodeConfiguration', () => {
     expect(merged['terminal.integrated.profiles.windows'].PowerShell).toBeDefined();
 
     expect(merged['terminal.integrated.profiles.windows']['Git Bash']).toBeDefined();
+  });
+
+  test('should replace package terminal profile args instead of merging them', async () => {
+    const initialSettings = {
+      'terminal.integrated.profiles.windows': {
+        'Short PowerShell': {
+          source: 'PowerShell',
+          args: ['-NoExit', '-Command', 'Write-Host custom']
+        },
+        MyCustomProfile: {
+          path: 'custom.exe'
+        }
+      }
+    };
+
+    await fs.writeJson(settingsPath, initialSettings, {
+      spaces: 2
+    });
+
+    await setupVSCodeConfiguration(tempRoot);
+
+    const merged = await fs.readJson(settingsPath);
+
+    expect(merged['terminal.integrated.profiles.windows']['Short PowerShell'].args).toEqual([
+      '-NoExit',
+      '-Command',
+      'function prompt { "[$((Get-Item .).Name)]> " }'
+    ]);
+
+    expect(merged['terminal.integrated.profiles.windows'].MyCustomProfile).toEqual({
+      path: 'custom.exe'
+    });
   });
 
   test('should merge editor.codeActionsOnSave with custom entries preserved', async () => {

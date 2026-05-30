@@ -9,6 +9,42 @@ async function importRuntimeDependencies() {
   return { deepmerge, jsonc };
 }
 
+function mergeTerminalProfilesWindows(existingProfiles, incomingProfiles, deepmerge) {
+  if (
+    existingProfiles == null ||
+    typeof existingProfiles !== 'object' ||
+    Array.isArray(existingProfiles) ||
+    incomingProfiles == null ||
+    typeof incomingProfiles !== 'object' ||
+    Array.isArray(incomingProfiles)
+  ) {
+    return incomingProfiles;
+  }
+
+  const mergedProfiles = { ...existingProfiles };
+
+  for (const [profileName, incomingProfile] of Object.entries(incomingProfiles)) {
+    const existingProfile = existingProfiles[profileName];
+
+    if (
+      existingProfile != null &&
+      typeof existingProfile === 'object' &&
+      !Array.isArray(existingProfile) &&
+      incomingProfile != null &&
+      typeof incomingProfile === 'object' &&
+      !Array.isArray(incomingProfile)
+    ) {
+      mergedProfiles[profileName] = deepmerge(existingProfile, incomingProfile, {
+        arrayMerge: (_, source) => source
+      });
+    } else {
+      mergedProfiles[profileName] = incomingProfile;
+    }
+  }
+
+  return mergedProfiles;
+}
+
 async function setupVSCodeConfiguration(projectRoot = process.cwd()) {
   const { deepmerge, jsonc } = await importRuntimeDependencies();
 
@@ -57,7 +93,9 @@ async function setupVSCodeConfiguration(projectRoot = process.cwd()) {
       const existing = projectSettings[key];
       const incoming = packageSettings[key];
 
-      if (existing == null || typeof existing !== 'object' || typeof incoming !== 'object') {
+      if (key === 'terminal.integrated.profiles.windows') {
+        mergedSettings[key] = mergeTerminalProfilesWindows(existing, incoming, deepmerge);
+      } else if (existing == null || typeof existing !== 'object' || typeof incoming !== 'object') {
         mergedSettings[key] = incoming;
       } else {
         mergedSettings[key] = deepmerge(existing, incoming, { arrayMerge: createDeduplicatingArrayMerger() });
