@@ -36,13 +36,13 @@ function collectFiles() {
   const files = new Set();
 
   // ---- release folders ----
-  for (const dir of ['release', 'releases']) {
-    if (fs.existsSync(dir)) {
-      for (const file of globSync(`${dir}/**/*`, { nodir: true })) {
-        files.add(file);
-      }
-    }
-  }
+  // for (const dir of ['release', 'releases']) {
+  //   if (fs.existsSync(dir)) {
+  //     for (const file of globSync(`${dir}/**/*`, { nodir: true })) {
+  //       files.add(file);
+  //     }
+  //   }
+  // }
 
   // ---- package.json "files" field ----
   try {
