@@ -20,11 +20,6 @@ foreach ($candidate in @(
   }
 }
 
-# Ensure WORKSPACE_FOLDER is available to this session.
-if (-not $env:WORKSPACE_FOLDER) {
-  $env:WORKSPACE_FOLDER = $workspaceRoot
-}
-
 # Execution policy (only if needed)
 # if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') {
 #   Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -Force
