@@ -61,4 +61,14 @@ describe('eslint base config integration', () => {
     // Cleanup the clean.js file
     fs.removeSync(cleanJsPath);
   });
+
+  test('eslint --fix does not report unused React import in JSX files', () => {
+    const unusedFilePath = setupModule.writeUglyCodes('unused-react-import', 'jsx');
+    const result = setupModule.runEslint(unusedFilePath, ['--fix'], { stdio: 'pipe' });
+
+    expect(result.status).not.toBe(2); // 2 = fatal error
+
+    const fixed = fs.readFileSync(unusedFilePath, 'utf8');
+    expect(fixed).toMatch(/import React.*;/);
+  });
 });

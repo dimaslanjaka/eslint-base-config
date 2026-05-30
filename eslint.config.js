@@ -204,7 +204,14 @@ export default defineConfig([
           message: 'require() is not allowed in ESM. Use import instead.'
         }
       ],
-
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^(_|React$)',
+          caughtErrorsIgnorePattern: '^_'
+        }
+      ],
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off'
     },
@@ -320,7 +327,7 @@ export default defineConfig([
         'error',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
+          varsIgnorePattern: '^(_|React$)',
           caughtErrorsIgnorePattern: '^_'
         }
       ],
