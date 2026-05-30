@@ -87,7 +87,7 @@ jobs:
         with:
           node-version: ${{ env.CI_NODE_VERSION }}
           cache: 'yarn'
-          cache-dependency-path: ./package.json
+          # cache-dependency-path: ./package.json
 
       - name: '🧁 Setup Bun'
         uses: oven-sh/setup-bun@v2
