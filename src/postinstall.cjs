@@ -31,19 +31,9 @@ try {
   console.warn('Failed to validate consumer package.json:', err);
 }
 
-const basePath =
-  pkg.name === '@dimaslanjaka/eslint-base-config'
-    ? path.join(consumerRoot, 'tmp', '.postinstall-run')
-    : path.join(consumerRoot, 'node_modules', pkg.name, '.postinstall-run');
+const basePath = path.join(consumerRoot, 'tmp', pkg.name, '.postinstall-run');
 
 const postinstallMarkerPath = path.join(basePath, `${hash}.txt`);
-
-function ensureDirSafe(dir) {
-  if (fs.existsSync(dir) && !fs.lstatSync(dir).isDirectory()) {
-    fs.removeSync(dir); // remove file blocking directory creation
-  }
-  fs.mkdirSync(dir, { recursive: true });
-}
 
 // skip if already done
 if (!isJest && fs.existsSync(postinstallMarkerPath)) {
@@ -55,7 +45,7 @@ async function run() {
   try {
     await setupVSCodeConfiguration(consumerRoot);
 
-    ensureDirSafe(basePath);
+    fs.ensureDirSync(basePath);
 
     fs.writeFileSync(postinstallMarkerPath, `Postinstall script run on ${new Date().toISOString()}`);
   } catch (err) {
