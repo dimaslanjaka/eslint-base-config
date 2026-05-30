@@ -9,10 +9,10 @@ else {
 # Resolve oh-my-posh config using resolved workspace root
 $configPath = $null
 foreach ($candidate in @(
-  (Join-Path $workspaceRoot 'oh-my-posh.config.json'),
-  (Join-Path $workspaceRoot 'node_modules/@dimaslanjaka/eslint-base-config/oh-my-posh.config.json'),
-  (Join-Path $env:APPDATA 'npm/node_modules/@dimaslanjaka/eslint-base-config/oh-my-posh.config.json'),
-  (Join-Path $env:LOCALAPPDATA 'npm/node_modules/@dimaslanjaka/eslint-base-config/oh-my-posh.config.json')
+  (Join-Path $workspaceRoot 'config/oh-my-posh.config.json'),
+  (Join-Path $workspaceRoot 'node_modules/@dimaslanjaka/eslint-base-config/config/oh-my-posh.config.json'),
+  (Join-Path $env:APPDATA 'npm/node_modules/@dimaslanjaka/eslint-base-config/config/oh-my-posh.config.json'),
+  (Join-Path $env:LOCALAPPDATA 'npm/node_modules/@dimaslanjaka/eslint-base-config/config/oh-my-posh.config.json')
 )) {
   if (Test-Path $candidate) {
     $configPath = $candidate

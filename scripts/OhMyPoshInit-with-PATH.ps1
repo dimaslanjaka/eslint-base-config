@@ -8,10 +8,10 @@ else {
 
 # Resolve oh-my-posh config using resolved workspace root
 $configPath = @(
-  (Join-Path $workspaceRoot 'oh-my-posh.config.json'),
-  (Join-Path $workspaceRoot 'node_modules/@dimaslanjaka/eslint-base-config/oh-my-posh.config.json'),
-  (Join-Path $env:APPDATA 'npm/node_modules/@dimaslanjaka/eslint-base-config/oh-my-posh.config.json'),
-  (Join-Path $env:LOCALAPPDATA 'npm/node_modules/@dimaslanjaka/eslint-base-config/oh-my-posh.config.json')
+  (Join-Path $workspaceRoot 'config/oh-my-posh.config.json'),
+  (Join-Path $workspaceRoot 'node_modules/@dimaslanjaka/eslint-base-config/config/oh-my-posh.config.json'),
+  (Join-Path $env:APPDATA 'npm/node_modules/@dimaslanjaka/eslint-base-config/config/oh-my-posh.config.json'),
+  (Join-Path $env:LOCALAPPDATA 'npm/node_modules/@dimaslanjaka/eslint-base-config/config/oh-my-posh.config.json')
 ) | Where-Object { Test-Path $_ } | Select-Object -First 1
 
 # Ensure WORKSPACE_FOLDER is available to this session.
