@@ -125,6 +125,8 @@ function ug_run_all_entry_point() {
   } finally {
     console.log("cleanup still ugly");
   }
+
+  try { throw new Error("no-empty ESLint, should not throw") } catch {}
 }
 
 ug_start_callback_hell_chain(ug_run_all_entry_point);

@@ -46,3 +46,5 @@ class A{
 add(a,b)
 bad()
 obj.y()
+
+try { throw new Error("no-empty ESLint, should not throw") } catch {}

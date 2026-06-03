@@ -13,6 +13,7 @@ function useUglyState(initialState = 0) {
 
   const ugClick = useCallback(() => {
     console.log("clicked")
+    try { throw new Error("no-empty ESLint, should not throw") } catch {}
 
     setUgState(function (prev) {
       const next = prev + 1
