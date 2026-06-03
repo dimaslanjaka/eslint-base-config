@@ -50,7 +50,8 @@ const baseGlobals = {
 };
 
 const commonRules = {
-  'prettier/prettier': ['error', prettierrc]
+  'prettier/prettier': ['error', prettierrc],
+  'no-empty': ['error', { allowEmptyCatch: true }]
 };
 
 const unusedRules = {
