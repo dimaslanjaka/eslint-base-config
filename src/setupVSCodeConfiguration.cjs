@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('upath');
+const { execSync } = require('child_process');
 const createDeduplicatingArrayMerger = require('./createDeduplicatingArrayMerger.cjs');
 
 async function importRuntimeDependencies() {
@@ -67,6 +68,8 @@ async function setupVSCodeConfiguration(projectRoot = process.cwd()) {
 
     console.log(`Copied .vscode/settings.json to the ${projectRoot} project.`);
 
+    execSync(`npx -y prettier -w "${projectSettingsPath}"`, { stdio: 'inherit' });
+
     return;
   }
 
@@ -104,6 +107,8 @@ async function setupVSCodeConfiguration(projectRoot = process.cwd()) {
   }
 
   fs.writeFileSync(projectSettingsPath, JSON.stringify(mergedSettings, null, 2));
+
+  execSync(`npx -y prettier -w "${projectSettingsPath}"`, { stdio: 'inherit' });
 
   console.log(`Merged .vscode/settings.json with selective deepmerge in the ${projectRoot} project.`);
 }
