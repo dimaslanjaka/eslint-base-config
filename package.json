@@ -33,7 +33,7 @@
   "scripts": {
     "build": "rollup -c rollup.config.js && npm run build-dts && copy .prettierrc.json ./dist/.prettierrc.json && node debug-tgz.mjs",
     "build-dts": "tsc -p tsconfig.dts.json && npx rimraf dist/src",
-    "pack": "node package.cjs",
+    "pack": "node scripts/normalize-resolutions.mjs && node package.cjs && node scripts/normalize-resolutions.mjs --restore",
     "prepare": "husky",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles --forceExit --bail=1",
     "test:coverage": "npm test -- --coverage",
