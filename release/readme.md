@@ -2,13 +2,13 @@
 ## Releases
 | version | tarball url |
 | :--- | :--- |
-| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/5c82774/release/dimaslanjaka-eslint-base-config-1.0.0.tgz |
+| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/e662bc9/release/dimaslanjaka-eslint-base-config-1.0.0.tgz |
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/master/release/dimaslanjaka-eslint-base-config-1.0.0.tgz |
-| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/5c82774/release/dimaslanjaka-eslint-base-config-1.0.1.tgz |
+| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/b8335d1/release/dimaslanjaka-eslint-base-config-1.0.1.tgz |
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/master/release/dimaslanjaka-eslint-base-config-1.0.1.tgz |
-| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/5c82774/release/dimaslanjaka-eslint-base-config-1.0.2.tgz |
+| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/84028e4/release/dimaslanjaka-eslint-base-config-1.0.2.tgz |
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/master/release/dimaslanjaka-eslint-base-config-1.0.2.tgz |
-| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/5c82774/release/dimaslanjaka-eslint-base-config.tgz |
+| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/84028e4/release/dimaslanjaka-eslint-base-config.tgz |
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/master/release/dimaslanjaka-eslint-base-config.tgz |
 
 use this tarball with `resolutions`:
@@ -32,6 +32,7 @@ use this tarball with `resolutions`:
 - or copy download url
 ![gambar](https://user-images.githubusercontent.com/12471057/203216541-3807d2c3-5213-49f3-b93d-c626dbae3b2e.png)
 - then run installation from command line
+
 ```bash
 npm i https://....url-tgz
 ```
