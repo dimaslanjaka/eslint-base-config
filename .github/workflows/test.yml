@@ -1,0 +1,115 @@
+name: Node.js Package Test
+concurrency:
+  group: test-${{ github.event_name }}
+  cancel-in-progress: true
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - '**/test*/**'
+      - '**/test*'
+      - '**/src/**'
+env:
+  CI_NODE_VERSION: 24.16.0
+  CI_PYTHON_VERSION: '3.11'
+  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN || secrets.GITHUB_TOKEN || github.token }}
+  GH_TOKEN: ${{ secrets.ACCESS_TOKEN || secrets.GITHUB_TOKEN || github.token }}
+jobs:
+  ci:
+    name: 🔨 Build, Pack & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout workflow repository
+        uses: actions/checkout@v6
+      - name: ⬇️ Setup CI Environment
+        uses: ./.github/actions/setup-environments
+        with:
+          node-version: ${{ env.CI_NODE_VERSION }}
+          python-version: ${{ env.CI_PYTHON_VERSION }}
+          token: ${{ secrets.ACCESS_TOKEN || secrets.GITHUB_TOKEN || github.token }}
+          prefix-cache-key: ${{ runner.os }}-${{ github.event.repository.name }}-
+      - name: 🔨 Build project
+        run: corepack yarn build
+      - name: 📦 Pack project
+        run: corepack yarn pack
+      - name: 🧹 Clean GitHub Actions Cache
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.ACCESS_TOKEN || secrets.GITHUB_TOKEN || github.token }}
+        shell: bash
+        run: npx --legacy-peer-deps -y
+          binary-collections@https://raw.githubusercontent.com/dimaslanjaka/bin/master/releases/bin.tgz
+          clean-github-actions-caches --repo "${{ github.repository }}" --sha
+          "${{ github.sha }}"
+      - name: 🧪 Run tests in test/createDeduplicatingArrayMerger.test.mjs
+        id: run-test-createDeduplicatingArrayMerger-test-mjs
+        shell: bash
+        run: >-
+          if [ -f "test/createDeduplicatingArrayMerger.test.mjs" ]; then
+            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit --testTimeout=120000 --detectOpenHandles --bail=1 --testPathPatterns="createDeduplicatingArrayMerger.test.mjs"
+          else
+            echo "Skipping missing test file: test/createDeduplicatingArrayMerger.test.mjs"
+          fi
+      - name: 🧪 Run tests in test/setupVSCodeConfiguration.test.cjs
+        id: run-test-setupVSCodeConfiguration-test-cjs
+        shell: bash
+        run: >-
+          if [ -f "test/setupVSCodeConfiguration.test.cjs" ]; then
+            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit --testTimeout=120000 --detectOpenHandles --bail=1 --testPathPatterns="setupVSCodeConfiguration.test.cjs"
+          else
+            echo "Skipping missing test file: test/setupVSCodeConfiguration.test.cjs"
+          fi
+      - name: 🧪 Run tests in test/test-commonjs.test.cjs
+        id: run-test-test-commonjs-test-cjs
+        shell: bash
+        run: >-
+          if [ -f "test/test-commonjs.test.cjs" ]; then
+            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit --testTimeout=120000 --detectOpenHandles --bail=1 --testPathPatterns="test-commonjs.test.cjs"
+          else
+            echo "Skipping missing test file: test/test-commonjs.test.cjs"
+          fi
+      - name: 🧪 Run tests in test/test-esm.test.mjs
+        id: run-test-test-esm-test-mjs
+        shell: bash
+        run: >-
+          if [ -f "test/test-esm.test.mjs" ]; then
+            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit --testTimeout=120000 --detectOpenHandles --bail=1 --testPathPatterns="test-esm.test.mjs"
+          else
+            echo "Skipping missing test file: test/test-esm.test.mjs"
+          fi
+      - name: 🧪 Run tests in test/test-jsx.test.mjs
+        id: run-test-test-jsx-test-mjs
+        shell: bash
+        run: >-
+          if [ -f "test/test-jsx.test.mjs" ]; then
+            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit --testTimeout=120000 --detectOpenHandles --bail=1 --testPathPatterns="test-jsx.test.mjs"
+          else
+            echo "Skipping missing test file: test/test-jsx.test.mjs"
+          fi
+      - name: 🧪 Run tests in test/test-postinstall.test.mjs
+        id: run-test-test-postinstall-test-mjs
+        shell: bash
+        run: >-
+          if [ -f "test/test-postinstall.test.mjs" ]; then
+            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit --testTimeout=120000 --detectOpenHandles --bail=1 --testPathPatterns="test-postinstall.test.mjs"
+          else
+            echo "Skipping missing test file: test/test-postinstall.test.mjs"
+          fi
+      - name: 🧪 Run tests in test/test-ts.test.mjs
+        id: run-test-test-ts-test-mjs
+        shell: bash
+        run: >-
+          if [ -f "test/test-ts.test.mjs" ]; then
+            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit --testTimeout=120000 --detectOpenHandles --bail=1 --testPathPatterns="test-ts.test.mjs"
+          else
+            echo "Skipping missing test file: test/test-ts.test.mjs"
+          fi
+      - name: 🧪 Run tests in test/test-tsx.test.mjs
+        id: run-test-test-tsx-test-mjs
+        shell: bash
+        run: >-
+          if [ -f "test/test-tsx.test.mjs" ]; then
+            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit --testTimeout=120000 --detectOpenHandles --bail=1 --testPathPatterns="test-tsx.test.mjs"
+          else
+            echo "Skipping missing test file: test/test-tsx.test.mjs"
+          fi
