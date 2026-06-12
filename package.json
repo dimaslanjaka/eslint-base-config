@@ -32,7 +32,7 @@
   "type": "module",
   "scripts": {
     "build": "rollup -c rollup.config.js && npm run build-dts && copy .prettierrc.json ./dist/.prettierrc.json && node debug-tgz.mjs",
-    "build-dts": "tsc -p tsconfig.dts.json && npx rimraf dist/src",
+    "build-dts": "tsc -p tsconfig.dts.json && npx -y rimraf dist/src",
     "pack": "npx -y tarball-packer --normalize-resolutions --yarn",
     "prepare": "husky",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles --forceExit --bail=1",
@@ -89,6 +89,7 @@
     "@types/babel__preset-env": "^7",
     "@types/fs-extra": "^11",
     "@types/react": "^19",
+    "ansi-colors": "^4.1.3",
     "babel-jest": "^30.4.1",
     "binary-collections": "^2.0.11",
     "husky": "^9.1.7",
@@ -96,6 +97,7 @@
     "jest-config": "^30.4.2",
     "jest-mock": "^30.4.1",
     "lint-staged": "^17.0.5",
+    "rimraf": "^6.1.3",
     "rollup": "^4.60.4",
     "tar-stream": "^3.2.0",
     "ts-jest": "^29.4.11"
