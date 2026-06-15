@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import fs from 'fs-extra';
-import { glob } from 'glob';
+import * as glob from 'glob';
 import path from 'upath';
 import moment from 'moment';
 import { fileURLToPath } from 'url';
@@ -34,7 +34,7 @@ async function resolvePattern(pattern) {
     return (await fs.pathExists(pattern)) ? [pattern] : [];
   }
 
-  return glob(pattern, {
+  return glob.glob(pattern, {
     dot: true,
     nodir: true,
     ignore: ['**/tmp/**', '**/dist/**', '**/node_modules/**', '**/.cache/**']
