@@ -12,7 +12,7 @@ else
 fi
 
 # Regenerate workflow/action YAML files from source fixtures and stage for commit
-npx -y generate-ci
+npx -y generate-ci | bcc generate-ci
 if [ -n "$GITHUB_ACTIONS" ] || [ -n "$CI" ]; then
   echo "CI environment detected — skipping git add of generated action"
 else
@@ -32,6 +32,8 @@ fi
 # Verify release tarballs do not exceed 10MB
 check_tarballs() {
   dir="$1"
+  staged_files=$(git diff --cached --name-only)
+  echo "$staged_files" | grep -q "^$dir/" || return 0
   if [ -d "$dir" ]; then
     for file in "$dir"/*.tgz; do
       [ -e "$file" ] || continue
