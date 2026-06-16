@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { globSync } from 'glob';
+import * as glob from 'glob';
 import * as cp from 'cross-spawn';
 import pkg from '../package.json' with { type: 'json' };
 
@@ -38,7 +38,7 @@ function collectFiles() {
   // ---- release folders ----
   // for (const dir of ['release', 'releases']) {
   //   if (fs.existsSync(dir)) {
-  //     for (const file of globSync(`${dir}/**/*`, { nodir: true })) {
+  //     for (const file of glob.globSync(`${dir}/**/*`, { nodir: true })) {
   //       files.add(file);
   //     }
   //   }
@@ -48,13 +48,13 @@ function collectFiles() {
   try {
     if (Array.isArray(pkg.files)) {
       for (const pattern of pkg.files) {
-        for (const match of globSync(pattern, { nodir: false })) {
+        for (const match of glob.globSync(pattern, { nodir: false })) {
           const stat = fs.existsSync(match) && fs.statSync(match);
           if (!stat) continue;
 
           if (stat.isFile()) files.add(match);
           else if (stat.isDirectory()) {
-            for (const f of globSync(`${match}/**/*`, { nodir: true })) {
+            for (const f of glob.globSync(`${match}/**/*`, { nodir: true })) {
               files.add(f);
             }
           }
