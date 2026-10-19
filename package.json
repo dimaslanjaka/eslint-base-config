@@ -106,6 +106,7 @@
     "cross-spawn": "https://github.com/dimaslanjaka/node-cross-spawn/raw/dd0273f55b21f8c546ba86565b00a2f89151d15a/release/cross-spawn.tgz",
     "binary-collections": "https://github.com/dimaslanjaka/bin/raw/c50682c5c9276c5f07646f33b834987202767f83/releases/bin.tgz",
     "git-command-helper": "https://github.com/dimaslanjaka/git-command-helper/raw/849f10f15740f2c24911bc03e2fe9eb663f854c1/release/git-command-helper.tgz",
-    "sbg-utility": "https://github.com/dimaslanjaka/static-blog-generator/raw/1ca385787f7287155b547c5b97d5ffd5bcfab482/packages/sbg-utility/release/sbg-utility.tgz"
+    "sbg-utility": "https://github.com/dimaslanjaka/static-blog-generator/raw/1ca385787f7287155b547c5b97d5ffd5bcfab482/packages/sbg-utility/release/sbg-utility.tgz",
+    "got": "11.8.2"
   }
 }
