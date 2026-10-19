@@ -5,6 +5,8 @@ node_modules/
 package-lock.json
 yarn.lock
 .pnp.*
+commit*.txt
+.tmp*
 
 **/.yarn/*
 !**/.yarn/releases/
