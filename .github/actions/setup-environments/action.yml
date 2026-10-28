@@ -17,6 +17,10 @@ inputs:
     description: GitHub token for accessing resources
     required: false
     default: ${{ github.token }}
+  gitlab_token:
+    description: GitLab token for accessing resources
+    required: false
+    default: ''
 outputs:
   CACHE_YARN:
     description: Yarn cache folder
@@ -57,6 +61,10 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: 🔑 Configure git credentials for GitLab
+      shell: bash
+      run: git config --global url."https://oauth2:${{ inputs.gitlab_token
+        }}@gitlab.com/".insteadOf "https://gitlab.com/"
     - name: ⬇️ Checkout test-repo
       uses: actions/checkout@v6
       with:
@@ -64,41 +72,6 @@ runs:
         path: tmp/test-repo
         token: ${{ inputs.token }}
         ref: test
-    - name: ⬇️ Checkout packages/git-command-helper
-      uses: actions/checkout@v6
-      with:
-        repository: dimaslanjaka/git-command-helper
-        path: packages/git-command-helper
-        token: ${{ inputs.token }}
-        ref: pre-release
-    - name: ⬇️ Checkout packages/cross-spawn
-      uses: actions/checkout@v6
-      with:
-        repository: dimaslanjaka/node-cross-spawn
-        path: packages/cross-spawn
-        token: ${{ inputs.token }}
-        ref: private
-    - name: ⬇️ Checkout packages/ai-toolkit
-      uses: actions/checkout@v6
-      with:
-        repository: dimaslanjaka/ai-toolkit
-        path: packages/ai-toolkit
-        token: ${{ inputs.token }}
-        ref: master
-    - name: ⬇️ Checkout packages/sbg-utility
-      uses: actions/checkout@v6
-      with:
-        repository: dimaslanjaka/static-blog-generator
-        path: packages/sbg-utility
-        token: ${{ inputs.token }}
-        ref: sbg-utility
-    - name: ⬇️ Checkout packages/binary-collections
-      uses: actions/checkout@v6
-      with:
-        repository: dimaslanjaka/bin
-        path: packages/binary-collections
-        token: ${{ inputs.token }}
-        ref: master
     - name: 🔁 Pull & update submodules recursively
       continue-on-error: true
       shell: bash
@@ -115,7 +88,7 @@ runs:
           git submodule foreach "git submodule sync"
           echo "update submodules"
           npx -y rimraf .git/modules
-          npx --legacy-peer-deps -y binary-collections@https://raw.githubusercontent.com/dimaslanjaka/bin/master/releases/bin.tgz submodule-install
+          npx --legacy-peer-deps -y binary-collections@https://github.com/dimaslanjaka/bin/raw/9688287aecab1a125de2d63fdd30651017a9862e/releases/bin.tgz submodule-install
         else
           echo "No submodules found or .gitmodules is empty, skipping update."
           exit 0

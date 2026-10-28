@@ -102,9 +102,9 @@
     "ts-jest": "^29.4.11"
   },
   "resolutions": {
-    "cross-spawn": "https://github.com/dimaslanjaka/node-cross-spawn/raw/dd0273f55b21f8c546ba86565b00a2f89151d15a/release/cross-spawn.tgz",
-    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/c50682c5c9276c5f07646f33b834987202767f83/releases/bin.tgz",
-    "git-command-helper": "https://github.com/dimaslanjaka/git-command-helper/raw/849f10f15740f2c24911bc03e2fe9eb663f854c1/release/git-command-helper.tgz",
+    "cross-spawn": "https://github.com/dimaslanjaka/node-cross-spawn/raw/f3f4bde1887798c308928fc76dc590b23de992ea/release/cross-spawn.tgz",
+    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/ab7e2a2b357a6acafb81765e92e516649e6f713a/releases/bin.tgz",
+    "git-command-helper": "https://github.com/dimaslanjaka/git-command-helper/raw/6b3d00c2ffb72f7aa7dd55a39d022c68eb33ebda/release/git-command-helper.tgz",
     "sbg-utility": "https://github.com/dimaslanjaka/static-blog-generator/raw/1ca385787f7287155b547c5b97d5ffd5bcfab482/packages/sbg-utility/release/sbg-utility.tgz",
     "got": "11.8.2"
   }
