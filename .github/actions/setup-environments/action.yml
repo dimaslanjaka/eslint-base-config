@@ -66,7 +66,7 @@ runs:
       run: git config --global url."https://oauth2:${{ inputs.gitlab_token
         }}@gitlab.com/".insteadOf "https://gitlab.com/"
     - name: ⬇️ Checkout test-repo
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: dimaslanjaka/test-repo
         path: tmp/test-repo
@@ -94,12 +94,12 @@ runs:
           exit 0
         fi
     - name: 🟢 Setup Node.js
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ inputs.node-version }}
     - name: 🐍 Setup Python
       if: inputs.python-version != ''
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ inputs.python-version }}
     - name: ⚙️ Set EOL git configs
@@ -211,6 +211,14 @@ runs:
         mkdir -p "${HOME}/.npm-global"
 
         npm config set prefix "${HOME}/.npm-global"
+
+        # fix EALLOWREMOTE error occurs in npm v12+
+
+        if npm config set allow-remote all 2>/dev/null; then
+          echo "npm allow-remote configured successfully"
+        else
+          echo "npm allow-remote configuration failed or not supported in this npm version"
+        fi
 
         echo "${HOME}/.npm-global/bin" >> $GITHUB_PATH
 

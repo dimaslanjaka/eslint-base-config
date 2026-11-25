@@ -304,7 +304,7 @@ export default defineConfig([
       parser: tseslint.parser,
 
       parserOptions: {
-        projectService: true
+        // projectService: true
       },
 
       globals: baseGlobals

@@ -1,14 +1,12 @@
 {
   "name": "@dimaslanjaka/eslint-base-config",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Base ESLint configuration for JavaScript projects",
   "main": "dist/eslint.config.cjs",
   "module": "dist/eslint.config.mjs",
   "types": "dist/eslint.config.d.ts",
   "bin": {
-    "dimaslanjaka-eslint": "postinstall.cjs",
-    "ebc-eslint": "postinstall.cjs",
-    "eslint-config-base": "postinstall.cjs"
+    "dimaslanjaka-eslint": "postinstall.cjs"
   },
   "files": [
     "./eslint.config.js",
@@ -102,9 +100,9 @@
     "ts-jest": "^29.4.11"
   },
   "resolutions": {
-    "cross-spawn": "https://github.com/dimaslanjaka/node-cross-spawn/raw/f3f4bde1887798c308928fc76dc590b23de992ea/release/cross-spawn.tgz",
-    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/ab7e2a2b357a6acafb81765e92e516649e6f713a/releases/bin.tgz",
-    "git-command-helper": "https://github.com/dimaslanjaka/git-command-helper/raw/6b3d00c2ffb72f7aa7dd55a39d022c68eb33ebda/release/git-command-helper.tgz",
+    "cross-spawn": "https://github.com/dimaslanjaka/node-cross-spawn/raw/85a5399f99298c761dcd4b4aaf802dcfec502088/release/cross-spawn.tgz",
+    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/515e99f12dfbeaeec4e1485631a14826845b299b/releases/bin.tgz",
+    "git-command-helper": "https://github.com/dimaslanjaka/git-command-helper/raw/028ef16009d7ba068d6214c68950773c90e1dfa6/release/git-command-helper.tgz",
     "sbg-utility": "https://github.com/dimaslanjaka/static-blog-generator/raw/1ca385787f7287155b547c5b97d5ffd5bcfab482/packages/sbg-utility/release/sbg-utility.tgz",
     "got": "11.8.2"
   }
