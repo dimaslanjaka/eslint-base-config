@@ -8,9 +8,9 @@
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/master/release/dimaslanjaka-eslint-base-config-1.0.1.tgz |
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/27cdc64/release/dimaslanjaka-eslint-base-config-1.0.2.tgz |
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/master/release/dimaslanjaka-eslint-base-config-1.0.2.tgz |
-| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/71d034a/release/dimaslanjaka-eslint-base-config-1.0.3.tgz |
+| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/d472b1d/release/dimaslanjaka-eslint-base-config-1.0.3.tgz |
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/master/release/dimaslanjaka-eslint-base-config-1.0.3.tgz |
-| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/71d034a/release/dimaslanjaka-eslint-base-config.tgz |
+| latest | https://github.com/dimaslanjaka/eslint-base-config/raw/d472b1d/release/dimaslanjaka-eslint-base-config.tgz |
 | latest | https://github.com/dimaslanjaka/eslint-base-config/raw/master/release/dimaslanjaka-eslint-base-config.tgz |
 
 use this tarball with `resolutions`:
